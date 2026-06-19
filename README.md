@@ -40,23 +40,23 @@ npm run dev
 ## Projektstruktur
 ```
 app/
-	layout.tsx               Root-Layout mit Navbar
-	page.tsx                 Redirect -> /cards
-	login/page.tsx           Login & Registrierung
-	cards/
-		page.tsx               Kartenliste (Server Component)
-		new/page.tsx           Neue Karte anlegen
-		[id]/edit/page.tsx     Karte bearbeiten
+  layout.tsx               Root-Layout mit Navbar
+  page.tsx                 Redirect -> /cards
+  login/page.tsx           Login & Registrierung
+  cards/
+    page.tsx               Kartenliste (Server Component)
+    new/page.tsx           Neue Karte anlegen
+    [id]/edit/page.tsx     Karte bearbeiten
 components/
-	Navbar.tsx               Navigationsleiste
-	CardForm.tsx             Formular (Anlegen + Bearbeiten)
-	DeleteCardButton.tsx     Löschen-Button (Client Component)
+  Navbar.tsx               Navigationsleiste
+  CardForm.tsx             Formular (Anlegen + Bearbeiten)
+  DeleteCardButton.tsx     Löschen-Button (Client Component)
 lib/
-	supabase/client.ts       Browser-Client
-	supabase/server.ts       Server-Client (SSR)
-	actions/auth.ts          Server Actions: login, signup, logout
-	actions/cards.ts         Server Actions: createCard, updateCard, deleteCard
-	types.ts                 TypeScript-Typen
+  supabase/client.ts       Browser-Client
+  supabase/server.ts       Server-Client (SSR)
+  actions/auth.ts          Server Actions: login, signup, logout
+  actions/cards.ts         Server Actions: createCard, updateCard, deleteCard
+  types.ts                 TypeScript-Typen
 middleware.ts              Routing-Schutz via Supabase SSR
 supabase/migrations/       DB-Migration (cards-Tabelle + RLS)
 ```
