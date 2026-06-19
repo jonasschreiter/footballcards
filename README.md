@@ -6,7 +6,7 @@ Eine Next.js App (App Router, TypeScript, Tailwind CSS) mit Supabase Auth und ei
 
 - **Login / Registrierung** via Supabase Auth (E-Mail + Passwort)
 - **Kartenliste** - zeigt alle eigenen Karten (RLS: jede Karte gehört `auth.uid()`)
-- **Karte anlegen** - Formular mit Spieler, Team, Jahrgang, Zustand, Notizen und Bild-Upload
+- **Karte anlegen** - Formular mit Spieler, Team, Jahrgang, Zustand, Notizen und Bild-Upload (kein Bild-URL-Feld)
 - **Karte bearbeiten** - vorbefülltes Formular
 - **Karte löschen** - mit Bestätigungs-Dialog
 - **Middleware** - schützt `/cards/*`, leitet eingeloggte User von `/login` weg
@@ -31,6 +31,8 @@ Führe diese Dateien in deinem Supabase SQL Editor aus:
 
 ### 3. Supabase Storage
 Prüfe in Supabase unter **Storage**, dass der Bucket `card-images` existiert.
+
+Die App speichert Bilder per Datei-Upload in diesem Bucket.
 
 ### 4. Supabase Auth
 Stelle sicher, dass **Email Auth** aktiviert ist (Authentication -> Providers -> Email).

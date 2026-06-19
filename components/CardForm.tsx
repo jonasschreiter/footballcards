@@ -33,7 +33,7 @@ export default function CardForm({ card }: Props) {
     const fd = new FormData(e.currentTarget);
     const supabase = createClient();
 
-    let imageUrl = ((fd.get("image_url") as string) || "").trim() || null;
+    let imageUrl = card?.image_url ?? null;
     const imageFile = fd.get("image_file");
 
     if (imageFile instanceof File && imageFile.size > 0) {
@@ -167,22 +167,6 @@ export default function CardForm({ card }: Props) {
         />
         <p className="text-xs text-gray-500 mt-1">
           Optional. Wenn du ein Bild auswaehlst, wird es in Supabase Storage gespeichert.
-        </p>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Oder Bild-URL
-        </label>
-        <input
-          name="image_url"
-          type="url"
-          defaultValue={card?.image_url ?? ""}
-          placeholder="https://…"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
-        />
-        <p className="text-xs text-gray-500 mt-1">
-          Nur noetig, wenn du kein Bild hochlaedst.
         </p>
       </div>
 
