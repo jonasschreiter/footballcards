@@ -216,7 +216,7 @@ export default function CardForm({ card }: Props) {
             width={512}
             height={320}
             unoptimized
-            className="w-full max-w-xs h-48 object-cover rounded-lg border border-gray-200"
+            className="w-full h-auto max-h-96 object-contain rounded-lg border border-gray-200"
           />
         </div>
       )}

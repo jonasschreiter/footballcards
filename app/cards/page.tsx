@@ -78,7 +78,7 @@ export default async function CardsPage() {
                 width={800}
                 height={500}
                 unoptimized
-                className="w-full h-44 object-cover rounded-xl border border-gray-100 mb-2"
+                className="w-full h-auto max-h-96 object-contain rounded-xl border border-gray-100 mb-2"
               />
             )}
 
