@@ -37,14 +37,16 @@ export default function Navbar() {
           href="/cards"
           className="inline-flex items-center hover:opacity-90 transition-opacity"
         >
-          <Image
-            src="/cards-vault-logo.png"
-            alt="Cards-Vault Logo"
-            width={64}
-            height={64}
-            priority
-            className="h-12 w-12 sm:h-14 sm:w-14 object-contain"
-          />
+          <span className="h-12 w-12 sm:h-14 sm:w-14 overflow-hidden rounded-md inline-flex items-center justify-center">
+            <Image
+              src="/cards-vault-logo.png"
+              alt="Cards-Vault Logo"
+              width={220}
+              height={220}
+              priority
+              className="h-full w-full object-contain scale-[1.8]"
+            />
+          </span>
         </Link>
         <div className="w-full sm:w-auto flex items-center justify-end gap-2 sm:gap-4 text-sm">
           {email ? (
