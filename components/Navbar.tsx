@@ -32,12 +32,12 @@ export default function Navbar() {
 
   return (
     <nav className="bg-slate-950/80 text-slate-100 border-b border-slate-800 backdrop-blur-md shadow-lg shadow-black/20">
-      <div className="max-w-5xl mx-auto px-3 sm:px-4 py-2 sm:h-16 flex flex-wrap sm:flex-nowrap items-center gap-3 sm:gap-4 justify-between">
+      <div className="max-w-5xl mx-auto px-2 sm:px-3 py-1.5 sm:h-16 flex flex-wrap sm:flex-nowrap items-center gap-3 sm:gap-4 justify-between">
         <Link
           href="/cards"
           className="inline-flex items-center hover:opacity-90 transition-opacity"
         >
-          <span className="h-12 w-12 sm:h-14 sm:w-14 overflow-hidden rounded-md inline-flex items-center justify-center">
+          <span className="h-14 w-14 sm:h-[3.75rem] sm:w-[3.75rem] overflow-hidden rounded-md inline-flex items-center justify-center">
             <Image
               src="/cards-vault-logo.png"
               alt="Cards-Vault Logo"
