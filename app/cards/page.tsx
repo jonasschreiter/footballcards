@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -25,7 +26,17 @@ export default async function CardsPage() {
   return (
     <div className="space-y-6">
       <div className="form-reveal form-reveal-1 border border-slate-700/80 bg-slate-900/65 rounded-2xl p-4 sm:p-5 shadow-lg shadow-black/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-100">Cards-Vault</h1>
+        <div className="inline-flex items-center gap-3">
+          <Image
+            src="/cards-vault-logo.png"
+            alt="Cards-Vault Logo"
+            width={48}
+            height={48}
+            priority
+            className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
+          />
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-100">Cards-Vault</h1>
+        </div>
         <Link
           href="/cards/new"
           className="inline-flex items-center justify-center bg-gradient-to-r from-emerald-400 to-teal-300 hover:from-emerald-300 hover:to-teal-200 text-slate-950 text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors w-full sm:w-auto"

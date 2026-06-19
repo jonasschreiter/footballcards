@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
@@ -34,9 +35,17 @@ export default function Navbar() {
       <div className="max-w-5xl mx-auto px-3 sm:px-4 py-3 sm:h-14 flex flex-wrap sm:flex-nowrap items-center gap-3 sm:gap-4 justify-between">
         <Link
           href="/cards"
-          className="font-bold text-base sm:text-lg tracking-tight hover:text-emerald-300 transition-colors"
+          className="inline-flex items-center gap-2 font-bold text-base sm:text-lg tracking-tight hover:text-emerald-300 transition-colors"
         >
-          Cards-Vault
+          <Image
+            src="/cards-vault-logo.png"
+            alt="Cards-Vault Logo"
+            width={34}
+            height={34}
+            priority
+            className="h-8 w-8 rounded-md object-contain"
+          />
+          <span>Cards-Vault</span>
         </Link>
         <div className="w-full sm:w-auto flex items-center justify-end gap-2 sm:gap-4 text-sm">
           {email ? (
