@@ -36,7 +36,7 @@ export default function Navbar() {
           href="/cards"
           className="font-bold text-base sm:text-lg tracking-tight hover:text-emerald-300 transition-colors"
         >
-          ⚽ Karten-Katalog
+          Cards-Vault
         </Link>
         <div className="w-full sm:w-auto flex items-center justify-end gap-2 sm:gap-4 text-sm">
           {email ? (

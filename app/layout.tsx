@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fußball-Karten Katalog",
-  description: "Deine persönliche Fußball-Sammelkarten-Sammlung",
+  title: "Cards-Vault",
+  description: "Deine persönliche Karten-Sammlung",
 };
 
 export default function RootLayout({

@@ -29,9 +29,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-[70vh] items-center justify-center">
       <div className="w-full max-w-sm bg-slate-900/85 border border-slate-700 rounded-2xl shadow-xl shadow-black/30 p-8 backdrop-blur-sm">
-        <h1 className="text-2xl font-bold mb-6 text-center text-emerald-300">
-          ⚽ Karten-Katalog
-        </h1>
+        <h1 className="text-2xl font-bold mb-6 text-center text-emerald-300">Cards-Vault</h1>
 
         <div className="flex rounded-lg overflow-hidden border border-slate-700 mb-6">
           <button
