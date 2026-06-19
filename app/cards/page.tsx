@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -70,6 +71,17 @@ export default async function CardsPage() {
             key={card.id}
             className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col gap-2 hover:shadow-md transition-shadow"
           >
+            {card.image_url && (
+              <Image
+                src={card.image_url}
+                alt={`Karte von ${card.player_name}`}
+                width={800}
+                height={500}
+                unoptimized
+                className="w-full h-44 object-cover rounded-xl border border-gray-100 mb-2"
+              />
+            )}
+
             <div className="flex items-start justify-between gap-2">
               <div>
                 <h2 className="font-bold text-gray-900 text-base leading-tight">

@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { createCard, updateCard } from "@/lib/actions/cards";
+import { createClient } from "@/lib/supabase/client";
 import type { Card, CardInsert } from "@/lib/types";
 
 interface Props {
@@ -29,13 +31,55 @@ export default function CardForm({ card }: Props) {
     setError(null);
 
     const fd = new FormData(e.currentTarget);
+    const supabase = createClient();
+
+    let imageUrl = ((fd.get("image_url") as string) || "").trim() || null;
+    const imageFile = fd.get("image_file");
+
+    if (imageFile instanceof File && imageFile.size > 0) {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        setError("Bitte melde dich erneut an, bevor du ein Bild hochlaedst.");
+        setLoading(false);
+        return;
+      }
+
+      const extension = (imageFile.name.split(".").pop() || "jpg")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+      const filePath = `${user.id}/${crypto.randomUUID()}.${extension || "jpg"}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("card-images")
+        .upload(filePath, imageFile, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: imageFile.type || undefined,
+        });
+
+      if (uploadError) {
+        setError(`Bild-Upload fehlgeschlagen: ${uploadError.message}`);
+        setLoading(false);
+        return;
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from("card-images")
+        .getPublicUrl(filePath);
+
+      imageUrl = publicUrlData.publicUrl;
+    }
+
     const data: CardInsert = {
       player_name: fd.get("player_name") as string,
       team: fd.get("team") as string,
       year: parseInt(fd.get("year") as string, 10),
       condition: fd.get("condition") as Card["condition"],
       notes: (fd.get("notes") as string) || null,
-      image_url: (fd.get("image_url") as string) || null,
+      image_url: imageUrl,
     };
 
     try {
@@ -113,7 +157,22 @@ export default function CardForm({ card }: Props) {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Bild-URL
+          Bild hochladen
+        </label>
+        <input
+          name="image_file"
+          type="file"
+          accept="image/*"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm file:mr-3 file:px-3 file:py-1.5 file:rounded-md file:border-0 file:bg-green-50 file:text-green-700 file:font-medium"
+        />
+        <p className="text-xs text-gray-500 mt-1">
+          Optional. Wenn du ein Bild auswaehlst, wird es in Supabase Storage gespeichert.
+        </p>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Oder Bild-URL
         </label>
         <input
           name="image_url"
@@ -122,7 +181,26 @@ export default function CardForm({ card }: Props) {
           placeholder="https://…"
           className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
         />
+        <p className="text-xs text-gray-500 mt-1">
+          Nur noetig, wenn du kein Bild hochlaedst.
+        </p>
       </div>
+
+      {card?.image_url && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Aktuelles Bild
+          </label>
+          <Image
+            src={card.image_url}
+            alt={`Karte von ${card.player_name}`}
+            width={512}
+            height={320}
+            unoptimized
+            className="w-full max-w-xs h-48 object-cover rounded-lg border border-gray-200"
+          />
+        </div>
+      )}
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">

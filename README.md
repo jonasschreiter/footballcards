@@ -6,7 +6,7 @@ Eine Next.js App (App Router, TypeScript, Tailwind CSS) mit Supabase Auth und ei
 
 - **Login / Registrierung** via Supabase Auth (E-Mail + Passwort)
 - **Kartenliste** - zeigt alle eigenen Karten (RLS: jede Karte gehört `auth.uid()`)
-- **Karte anlegen** - Formular mit Spieler, Team, Jahrgang, Zustand, Notizen, Bild-URL
+- **Karte anlegen** - Formular mit Spieler, Team, Jahrgang, Zustand, Notizen und Bild-Upload
 - **Karte bearbeiten** - vorbefülltes Formular
 - **Karte löschen** - mit Bestätigungs-Dialog
 - **Middleware** - schützt `/cards/*`, leitet eingeloggte User von `/login` weg
@@ -24,12 +24,18 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon-key>
 ```
 
 ### 2. Datenbank-Migration
-Führe `supabase/migrations/20260619_cards.sql` in deinem Supabase SQL Editor aus.
+Führe diese Dateien in deinem Supabase SQL Editor aus:
 
-### 3. Supabase Auth
+1. `supabase/migrations/20260619_cards.sql`
+2. `supabase/migrations/20260619_storage.sql`
+
+### 3. Supabase Storage
+Prüfe in Supabase unter **Storage**, dass der Bucket `card-images` existiert.
+
+### 4. Supabase Auth
 Stelle sicher, dass **Email Auth** aktiviert ist (Authentication -> Providers -> Email).
 
-### 4. Starten
+### 5. Starten
 ```bash
 npm install
 npm run dev
