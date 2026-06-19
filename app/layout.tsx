@@ -35,7 +35,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen">
         <Navbar />
-        <main className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-8">{children}</main>
+        <main className="w-full px-3 sm:px-5 lg:px-8 xl:px-12 2xl:px-16 py-4 sm:py-8">{children}</main>
       </body>
     </html>
   );

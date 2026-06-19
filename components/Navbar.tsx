@@ -32,7 +32,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-slate-950/80 text-slate-100 border-b border-slate-800 backdrop-blur-md shadow-lg shadow-black/20">
-      <div className="max-w-5xl mx-auto px-2 sm:px-3 py-1.5 sm:h-16 flex flex-wrap sm:flex-nowrap items-center gap-3 sm:gap-4 justify-between">
+      <div className="w-full px-2 sm:px-4 lg:px-8 xl:px-12 2xl:px-16 py-1.5 sm:h-16 flex flex-wrap sm:flex-nowrap items-center gap-3 sm:gap-4 justify-between">
         <Link
           href="/cards"
           className="inline-flex items-center hover:opacity-90 transition-opacity"
