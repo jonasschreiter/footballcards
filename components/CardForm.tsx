@@ -26,6 +26,7 @@ export default function CardForm({ card }: Props) {
   const [loading, setLoading] = useState(false);
   const [recognizing, setRecognizing] = useState(false);
   const [recognitionConfidence, setRecognitionConfidence] = useState<number | null>(null);
+  const [analysisDone, setAnalysisDone] = useState(isEdit);
   const [playerName, setPlayerName] = useState(card?.player_name ?? "");
   const [team, setTeam] = useState(card?.team ?? "");
   const [year, setYear] = useState(card?.year ?? new Date().getFullYear());
@@ -33,10 +34,12 @@ export default function CardForm({ card }: Props) {
   const [notes, setNotes] = useState(card?.notes ?? "");
   const [psaGraded, setPsaGraded] = useState(card?.psa_graded ?? false);
   const [psaGrade, setPsaGrade] = useState<number | null>(card?.psa_grade ?? null);
+  const showDataFields = isEdit || analysisDone;
 
   async function recognizeCard(imageFile: File) {
     setRecognizing(true);
     setError(null);
+    setRecognitionConfidence(null);
 
     try {
       const recognitionFd = new FormData();
@@ -84,6 +87,7 @@ export default function CardForm({ card }: Props) {
       );
     } finally {
       setRecognizing(false);
+      setAnalysisDone(true);
     }
   }
 
@@ -171,109 +175,9 @@ export default function CardForm({ card }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-w-lg w-full">
-      <div className="grid sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Spielername *
-          </label>
-          <input
-            name="player_name"
-            required
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Team *
-          </label>
-          <input
-            name="team"
-            required
-            value={team}
-            onChange={(e) => setTeam(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-3 border border-gray-200 rounded-lg p-4">
-        <label className="inline-flex items-center gap-2 text-sm font-medium text-gray-700">
-          <input
-            name="psa_graded"
-            type="checkbox"
-            checked={psaGraded}
-            onChange={(e) => setPsaGraded(e.target.checked)}
-            className="h-4 w-4 rounded border-gray-300 text-green-700 focus:ring-green-600"
-          />
-          PSA-Grade?
-        </label>
-
-        {psaGraded && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              PSA Grade
-            </label>
-            <select
-              name="psa_grade"
-              required={psaGraded}
-              value={psaGrade ?? ""}
-              onChange={(e) =>
-                setPsaGrade(e.target.value ? Number.parseInt(e.target.value, 10) : null)
-              }
-              className="w-full sm:w-48 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
-            >
-              <option value="">Bitte waehlen</option>
-              {Array.from({ length: 11 }, (_, grade) => (
-                <option key={grade} value={grade}>
-                  {grade}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Jahrgang *
-          </label>
-          <input
-            name="year"
-            type="number"
-            required
-            min={1900}
-            max={new Date().getFullYear() + 1}
-            value={year}
-            onChange={(e) => setYear(Number.parseInt(e.target.value, 10) || new Date().getFullYear())}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Zustand *
-          </label>
-          <select
-            name="condition"
-            required
-            value={condition}
-            onChange={(e) => setCondition(e.target.value as Card["condition"])}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
-          >
-            {CONDITIONS.map((c) => (
-              <option key={c.value} value={c.value}>
-                {c.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div>
+      <div className="border border-gray-200 rounded-lg p-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Bild hochladen
+          Bild hochladen *
         </label>
         <input
           name="image_file"
@@ -282,17 +186,20 @@ export default function CardForm({ card }: Props) {
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) {
+              setAnalysisDone(false);
               void recognizeCard(file);
             }
           }}
           className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm file:mr-3 file:px-3 file:py-1.5 file:rounded-md file:border-0 file:bg-green-50 file:text-green-700 file:font-medium"
         />
-        <p className="text-xs text-gray-500 mt-1">
-          Optional. Nach der Bildauswahl werden Felder automatisch erkannt und vorbefuellt.
-        </p>
-        {recognizing && <p className="text-xs text-green-700 mt-1">Erkennung laeuft...</p>}
+        {!isEdit && !showDataFields && (
+          <p className="text-xs text-gray-600 mt-2">
+            Nach dem Upload analysiert die App das Foto und blendet danach alle Felder zum Bearbeiten ein.
+          </p>
+        )}
+        {recognizing && <p className="text-xs text-green-700 mt-2">Erkennung laeuft...</p>}
         {recognitionConfidence !== null && !recognizing && (
-          <p className="text-xs text-gray-600 mt-1">
+          <p className="text-xs text-gray-600 mt-2">
             Erkennungs-Sicherheit: {Math.round(recognitionConfidence * 100)}%
           </p>
         )}
@@ -314,18 +221,124 @@ export default function CardForm({ card }: Props) {
         </div>
       )}
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Notizen
-        </label>
-        <textarea
-          name="notes"
-          rows={3}
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600 resize-none"
-        />
-      </div>
+      {showDataFields && (
+        <>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Spielername *
+              </label>
+              <input
+                name="player_name"
+                required
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Team *
+              </label>
+              <input
+                name="team"
+                required
+                value={team}
+                onChange={(e) => setTeam(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+              />
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Jahrgang *
+              </label>
+              <input
+                name="year"
+                type="number"
+                required
+                min={1900}
+                max={new Date().getFullYear() + 1}
+                value={year}
+                onChange={(e) =>
+                  setYear(Number.parseInt(e.target.value, 10) || new Date().getFullYear())
+                }
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Zustand *
+              </label>
+              <select
+                name="condition"
+                required
+                value={condition}
+                onChange={(e) => setCondition(e.target.value as Card["condition"])}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+              >
+                {CONDITIONS.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="space-y-3 border border-gray-200 rounded-lg p-4">
+            <label className="inline-flex items-center gap-2 text-sm font-medium text-gray-700">
+              <input
+                name="psa_graded"
+                type="checkbox"
+                checked={psaGraded}
+                onChange={(e) => setPsaGraded(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-green-700 focus:ring-green-600"
+              />
+              PSA-Grade?
+            </label>
+
+            {psaGraded && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  PSA Grade
+                </label>
+                <select
+                  name="psa_grade"
+                  required={psaGraded}
+                  value={psaGrade ?? ""}
+                  onChange={(e) =>
+                    setPsaGrade(e.target.value ? Number.parseInt(e.target.value, 10) : null)
+                  }
+                  className="w-full sm:w-48 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+                >
+                  <option value="">Bitte waehlen</option>
+                  {Array.from({ length: 11 }, (_, grade) => (
+                    <option key={grade} value={grade}>
+                      {grade}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Notizen
+            </label>
+            <textarea
+              name="notes"
+              rows={3}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600 resize-none"
+            />
+          </div>
+        </>
+      )}
 
       {error && (
         <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
@@ -334,13 +347,15 @@ export default function CardForm({ card }: Props) {
       )}
 
       <div className="flex flex-col-reverse sm:flex-row gap-3">
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-green-700 hover:bg-green-800 disabled:opacity-60 text-white font-medium px-5 py-2 rounded-lg transition-colors w-full sm:w-auto"
-        >
-          {loading ? "Speichert…" : isEdit ? "Speichern" : "Karte anlegen"}
-        </button>
+        {showDataFields && (
+          <button
+            type="submit"
+            disabled={loading || recognizing}
+            className="bg-green-700 hover:bg-green-800 disabled:opacity-60 text-white font-medium px-5 py-2 rounded-lg transition-colors w-full sm:w-auto"
+          >
+            {loading ? "Speichert…" : isEdit ? "Speichern" : "Karte anlegen"}
+          </button>
+        )}
         <button
           type="button"
           onClick={() => router.push("/cards")}
