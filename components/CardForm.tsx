@@ -222,7 +222,7 @@ export default function CardForm({ card, previewImageUrl }: Props) {
           </label>
           <Image
             src={previewImageUrl}
-            alt={`Karte von ${card.player_name}`}
+            alt={card?.player_name ? `Karte von ${card.player_name}` : "Kartenbild"}
             width={512}
             height={320}
             unoptimized
