@@ -24,6 +24,7 @@ export default function CardForm({ card }: Props) {
   const isEdit = !!card;
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [psaGraded, setPsaGraded] = useState(card?.psa_graded ?? false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -32,6 +33,17 @@ export default function CardForm({ card }: Props) {
 
     const fd = new FormData(e.currentTarget);
     const supabase = createClient();
+
+    const isPsaGraded = fd.get("psa_graded") === "on";
+    const rawPsaGrade = fd.get("psa_grade") as string | null;
+    const psaGrade =
+      isPsaGraded && rawPsaGrade ? Number.parseInt(rawPsaGrade, 10) : null;
+
+    if (isPsaGraded && (psaGrade === null || Number.isNaN(psaGrade))) {
+      setError("Bitte waehle einen PSA-Grade zwischen 0 und 10.");
+      setLoading(false);
+      return;
+    }
 
     let imageUrl = card?.image_url ?? null;
     const imageFile = fd.get("image_file");
@@ -78,6 +90,8 @@ export default function CardForm({ card }: Props) {
       team: fd.get("team") as string,
       year: parseInt(fd.get("year") as string, 10),
       condition: fd.get("condition") as Card["condition"],
+      psa_graded: isPsaGraded,
+      psa_grade: psaGrade,
       notes: (fd.get("notes") as string) || null,
       image_url: imageUrl,
     };
@@ -119,6 +133,40 @@ export default function CardForm({ card }: Props) {
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
           />
         </div>
+      </div>
+
+      <div className="space-y-3 border border-gray-200 rounded-lg p-4">
+        <label className="inline-flex items-center gap-2 text-sm font-medium text-gray-700">
+          <input
+            name="psa_graded"
+            type="checkbox"
+            checked={psaGraded}
+            onChange={(e) => setPsaGraded(e.target.checked)}
+            className="h-4 w-4 rounded border-gray-300 text-green-700 focus:ring-green-600"
+          />
+          PSA-Grade?
+        </label>
+
+        {psaGraded && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              PSA Grade
+            </label>
+            <select
+              name="psa_grade"
+              required={psaGraded}
+              defaultValue={card?.psa_grade ?? ""}
+              className="w-full sm:w-48 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+            >
+              <option value="">Bitte waehlen</option>
+              {Array.from({ length: 11 }, (_, grade) => (
+                <option key={grade} value={grade}>
+                  {grade}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">

@@ -5,6 +5,8 @@ export interface Card {
   team: string;
   year: number;
   condition: "mint" | "near_mint" | "excellent" | "good" | "poor";
+  psa_graded: boolean;
+  psa_grade: number | null;
   notes: string | null;
   image_url: string | null;
   created_at: string;

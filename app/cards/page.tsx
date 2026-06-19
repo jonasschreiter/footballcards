@@ -90,6 +90,11 @@ export default async function CardsPage() {
                 <p className="text-sm text-gray-500">
                   {card.team} · {card.year}
                 </p>
+                {card.psa_graded && card.psa_grade !== null && (
+                  <p className="text-xs text-violet-700 font-semibold mt-1">
+                    PSA {card.psa_grade}
+                  </p>
+                )}
               </div>
               <span
                 className={`text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap ${conditionColor[card.condition]}`}
