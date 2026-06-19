@@ -22,11 +22,6 @@ const conditionColor: Record<Card["condition"], string> = {
   poor: "bg-rose-900/40 text-rose-300 border border-rose-800",
 };
 
-function isRookieCard(card: Card): boolean {
-  const combined = `${card.player_name} ${card.team} ${card.notes ?? ""}`;
-  return /\brookie\b|\brc\b/i.test(combined);
-}
-
 interface Props {
   cards: Card[];
 }
@@ -55,7 +50,7 @@ export default function CardsSearchPanel({ cards }: Props) {
     return cards.filter((card) => {
       if (teamFilter !== "all" && card.team !== teamFilter) return false;
       if (seasonFilter !== "all" && card.year !== seasonFilter) return false;
-      if (rookieOnly && !isRookieCard(card)) return false;
+      if (rookieOnly && !card.rookie_card) return false;
 
       if (!query) return true;
 
@@ -64,6 +59,7 @@ export default function CardsSearchPanel({ cards }: Props) {
         card.team,
         card.year,
         card.notes ?? "",
+        card.rookie_card ? "rookie" : "",
         conditionLabel[card.condition],
         card.psa_graded && card.psa_grade !== null ? `PSA ${card.psa_grade}` : "",
       ]
@@ -179,7 +175,7 @@ export default function CardsSearchPanel({ cards }: Props) {
                     PSA {card.psa_grade}
                   </p>
                 )}
-                {isRookieCard(card) && (
+                {card.rookie_card && (
                   <p className="text-xs text-amber-300 font-semibold mt-1">Rookie</p>
                 )}
               </div>

@@ -9,6 +9,7 @@ interface RecognitionResult {
   team: string | null;
   year: string | null;
   condition: CardCondition | null;
+  rookie_card: boolean | null;
   psa_graded: boolean | null;
   psa_grade: number | null;
   notes: string | null;
@@ -54,6 +55,7 @@ function normalizeResult(payload: unknown): RecognitionResult {
   const obj = typeof payload === "object" && payload !== null ? (payload as Record<string, unknown>) : {};
 
   const psaGraded = typeof obj.psa_graded === "boolean" ? obj.psa_graded : null;
+  const rookieCard = typeof obj.rookie_card === "boolean" ? obj.rookie_card : null;
   const psaGradeRaw = asNullableGrade(obj.psa_grade);
 
   return {
@@ -61,6 +63,7 @@ function normalizeResult(payload: unknown): RecognitionResult {
     team: asNullableString(obj.team),
     year: yearToSeason(asNullableYear(obj.year)),
     condition: isCondition(obj.condition) ? obj.condition : null,
+    rookie_card: rookieCard,
     psa_graded: psaGraded,
     psa_grade: psaGraded === true ? psaGradeRaw : null,
     notes: asNullableString(obj.notes),
@@ -187,7 +190,7 @@ export async function POST(request: Request) {
             content: [
               {
                 type: "input_text",
-                text: "Analysiere das Bild der Karte und extrahiere: player_name, team, year, condition (mint|near_mint|excellent|good|poor), psa_graded (boolean), psa_grade (0-10 oder null), notes (optional), confidence (0 bis 1). Verwende null fuer unbekannt.",
+                text: "Analysiere das Bild der Karte und extrahiere: player_name, team, year, condition (mint|near_mint|excellent|good|poor), rookie_card (boolean), psa_graded (boolean), psa_grade (0-10 oder null), notes (optional), confidence (0 bis 1). Verwende null fuer unbekannt.",
               },
               {
                 type: "input_image",
@@ -212,6 +215,7 @@ export async function POST(request: Request) {
                   type: ["string", "null"],
                   enum: ["mint", "near_mint", "excellent", "good", "poor", null],
                 },
+                rookie_card: { type: ["boolean", "null"] },
                 psa_graded: { type: ["boolean", "null"] },
                 psa_grade: { type: ["integer", "null"] },
                 notes: { type: ["string", "null"] },
@@ -222,6 +226,7 @@ export async function POST(request: Request) {
                 "team",
                 "year",
                 "condition",
+                "rookie_card",
                 "psa_graded",
                 "psa_grade",
                 "notes",

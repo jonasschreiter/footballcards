@@ -38,6 +38,7 @@ export default function CardForm({ card }: Props) {
   const [year, setYear] = useState<string>(card?.year ?? "");
   const [condition, setCondition] = useState<Card["condition"]>(card?.condition ?? "excellent");
   const [notes, setNotes] = useState(card?.notes ?? "");
+  const [rookieCard, setRookieCard] = useState(card?.rookie_card ?? false);
   const [psaGraded, setPsaGraded] = useState(card?.psa_graded ?? false);
   const [psaGrade, setPsaGrade] = useState<number | null>(card?.psa_grade ?? null);
   const showDataFields = isEdit || analysisDone;
@@ -63,6 +64,7 @@ export default function CardForm({ card }: Props) {
           team: string | null;
           year: string | null;
           condition: Card["condition"] | null;
+          rookie_card: boolean | null;
           psa_graded: boolean | null;
           psa_grade: number | null;
           notes: string | null;
@@ -79,6 +81,7 @@ export default function CardForm({ card }: Props) {
       if (payload.data.year) setYear(payload.data.year);
       if (payload.data.condition) setCondition(payload.data.condition);
       if (payload.data.notes) setNotes(payload.data.notes);
+      if (payload.data.rookie_card !== null) setRookieCard(payload.data.rookie_card);
 
       if (payload.data.psa_graded !== null) {
         setPsaGraded(payload.data.psa_graded);
@@ -106,6 +109,7 @@ export default function CardForm({ card }: Props) {
     const supabase = createClient();
 
     const isPsaGraded = fd.get("psa_graded") === "on";
+    const isRookieCard = fd.get("rookie_card") === "on";
     const rawPsaGrade = fd.get("psa_grade") as string | null;
     const psaGrade =
       isPsaGraded && rawPsaGrade ? Number.parseInt(rawPsaGrade, 10) : null;
@@ -167,6 +171,7 @@ export default function CardForm({ card }: Props) {
       team,
       year,
       condition,
+      rookie_card: isRookieCard,
       psa_graded: isPsaGraded,
       psa_grade: psaGrade,
       notes: notes.trim() || null,
@@ -305,6 +310,17 @@ export default function CardForm({ card }: Props) {
           </div>
 
           <div className="space-y-3 border border-slate-700 bg-slate-900/70 rounded-lg p-4">
+            <label className="inline-flex items-center gap-2 text-sm font-medium text-slate-200">
+              <input
+                name="rookie_card"
+                type="checkbox"
+                checked={rookieCard}
+                onChange={(e) => setRookieCard(e.target.checked)}
+                className="h-4 w-4 rounded border-slate-600 bg-slate-950 text-amber-400 focus:ring-amber-400"
+              />
+              Rookie Card?
+            </label>
+
             <label className="inline-flex items-center gap-2 text-sm font-medium text-slate-200">
               <input
                 name="psa_graded"

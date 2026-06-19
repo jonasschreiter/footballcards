@@ -5,6 +5,7 @@ export interface Card {
   team: string;
   year: string;
   condition: "mint" | "near_mint" | "excellent" | "good" | "poor";
+  rookie_card: boolean;
   psa_graded: boolean;
   psa_grade: number | null;
   notes: string | null;
