@@ -44,7 +44,7 @@ export default function Navbar() {
               width={220}
               height={220}
               priority
-              className="h-full w-full object-cover object-left scale-[1.35]"
+              className="h-full w-full object-contain"
             />
           </span>
         </Link>
