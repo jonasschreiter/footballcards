@@ -21,6 +21,8 @@ export async function signup(formData: FormData) {
   const inviteCode = (formData.get("invite_code") as string | null)?.trim() ?? "";
   const requiredInviteCode = process.env.SIGNUP_INVITE_CODE?.trim() ?? "";
 
+  const normalizeCode = (value: string) => value.replace(/\s+/g, "").toLowerCase();
+
   if (!requiredInviteCode) {
     return {
       error:
@@ -28,7 +30,11 @@ export async function signup(formData: FormData) {
     };
   }
 
-  if (inviteCode !== requiredInviteCode) {
+  if (!inviteCode) {
+    return { error: "Bitte Einladungscode eingeben." };
+  }
+
+  if (normalizeCode(inviteCode) !== normalizeCode(requiredInviteCode)) {
     return { error: "Einladungscode ist ungültig." };
   }
 

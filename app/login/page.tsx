@@ -15,14 +15,21 @@ export default function LoginPage() {
     setError(null);
     setMessage(null);
 
-    const formData = new FormData(e.currentTarget);
-    const result = mode === "login" ? await login(formData) : await signup(formData);
+    try {
+      const formData = new FormData(e.currentTarget);
+      const result = mode === "login" ? await login(formData) : await signup(formData);
 
-    if (result && "error" in result) {
-      setError(result.error ?? "Unbekannter Fehler");
-    } else if (result && "message" in result) {
-      setMessage(result.message ?? null);
+      if (result && "error" in result) {
+        setError(result.error ?? "Unbekannter Fehler");
+      } else if (result && "message" in result) {
+        setMessage(result.message ?? null);
+      } else if (mode === "signup") {
+        setError("Registrierung fehlgeschlagen. Bitte Eingaben prüfen.");
+      }
+    } catch {
+      setError("Aktion fehlgeschlagen. Bitte versuche es erneut.");
     }
+
     setLoading(false);
   }
 
@@ -96,6 +103,9 @@ export default function LoginPage() {
                 className="w-full border border-slate-700 bg-slate-950/80 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 placeholder="Code eingeben"
               />
+              <p className="text-xs text-slate-400 mt-1">
+                Groß/Kleinschreibung und Leerzeichen werden ignoriert.
+              </p>
             </div>
           )}
 
