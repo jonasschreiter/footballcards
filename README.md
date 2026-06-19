@@ -10,6 +10,7 @@ Eine Next.js App (App Router, TypeScript, Tailwind CSS) mit Supabase Auth und ei
 - **Rookie Flag** - Rookie Card per Checkbox setzen (gelbes Rookie-Badge in der Liste)
 - **PSA-Grade** - optional per Checkbox mit Dropdown-Auswahl von 0 bis 10
 - **Auto-Erkennung** - Bildauswahl kann Felder automatisch per KI vorbefuellen
+- **Karten-Detailseite** - Klick auf Karte öffnet Detailansicht mit Bild, Daten und Wertentwicklung
 - **Karte bearbeiten** - vorbefülltes Formular
 - **Karte löschen** - mit Bestätigungs-Dialog
 - **Middleware** - schützt `/cards/*`, leitet eingeloggte User von `/login` weg
@@ -36,6 +37,7 @@ Führe diese Dateien in deinem Supabase SQL Editor aus (in dieser Reihenfolge):
 3. `supabase/migrations/20260619_storage.sql`
 4. `supabase/migrations/20260619_season_format.sql` (ändert year-Feld zu Text für Saison-Format wie "18/19")
 5. `supabase/migrations/20260619_rookie_flag.sql`
+6. `supabase/migrations/20260619_card_values.sql`
 
 ### 3. Supabase Storage
 Prüfe in Supabase unter **Storage**, dass der Bucket `card-images` existiert.

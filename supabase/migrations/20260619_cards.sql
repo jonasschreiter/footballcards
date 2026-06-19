@@ -9,6 +9,8 @@ create table if not exists public.cards (
   year        integer not null check (year >= 1800 and year <= 2100),
   condition   text not null check (condition in ('mint','near_mint','excellent','good','poor')),
   rookie_card boolean not null default false,
+  purchase_price numeric(10,2),
+  current_value numeric(10,2),
   notes       text,
   image_url   text,
   created_at  timestamptz not null default now()

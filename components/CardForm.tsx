@@ -175,6 +175,8 @@ export default function CardForm({ card }: Props) {
       rookie_card: isRookieCard,
       psa_graded: isPsaGraded,
       psa_grade: psaGrade,
+      purchase_price: card?.purchase_price ?? null,
+      current_value: card?.current_value ?? null,
       notes: notes.trim() || null,
       image_url: imageUrl,
     };

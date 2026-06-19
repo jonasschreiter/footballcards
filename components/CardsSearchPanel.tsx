@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import DeleteCardButton from "@/components/DeleteCardButton";
 import type { Card } from "@/lib/types";
 
@@ -27,6 +28,7 @@ interface Props {
 }
 
 export default function CardsSearchPanel({ cards }: Props) {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [teamFilter, setTeamFilter] = useState("all");
   const [seasonFilter, setSeasonFilter] = useState("all");
@@ -152,7 +154,8 @@ export default function CardsSearchPanel({ cards }: Props) {
         {filteredCards.map((card) => (
           <div
             key={card.id}
-            className="form-reveal form-reveal-4 bg-slate-900/80 rounded-2xl shadow-lg shadow-black/20 border border-slate-700/70 p-4 sm:p-5 flex flex-col gap-2 hover:border-slate-500 transition-colors"
+            onClick={() => router.push(`/cards/${card.id}`)}
+            className="form-reveal form-reveal-4 bg-slate-900/80 rounded-2xl shadow-lg shadow-black/20 border border-slate-700/70 p-4 sm:p-5 flex flex-col gap-2 hover:border-slate-500 transition-colors cursor-pointer"
           >
             {card.image_url && (
               <Image
@@ -195,8 +198,16 @@ export default function CardsSearchPanel({ cards }: Props) {
 
             <div className="flex gap-2 mt-auto pt-2 border-t border-slate-800">
               <Link
-                href={`/cards/${card.id}/edit`}
+                href={`/cards/${card.id}`}
+                onClick={(e) => e.stopPropagation()}
                 className="flex-1 text-center text-sm text-emerald-300 hover:text-emerald-200 font-medium transition-colors py-2 rounded-md hover:bg-emerald-500/10"
+              >
+                Details
+              </Link>
+              <Link
+                href={`/cards/${card.id}/edit`}
+                onClick={(e) => e.stopPropagation()}
+                className="flex-1 text-center text-sm text-cyan-300 hover:text-cyan-200 font-medium transition-colors py-2 rounded-md hover:bg-cyan-500/10"
               >
                 Bearbeiten
               </Link>

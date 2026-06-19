@@ -8,6 +8,8 @@ export interface Card {
   rookie_card: boolean;
   psa_graded: boolean;
   psa_grade: number | null;
+  purchase_price: number | null;
+  current_value: number | null;
   notes: string | null;
   image_url: string | null;
   created_at: string;

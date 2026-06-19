@@ -6,7 +6,8 @@ import { deleteCard } from "@/lib/actions/cards";
 export default function DeleteCardButton({ id }: { id: string }) {
   const [isPending, startTransition] = useTransition();
 
-  function handleDelete() {
+  function handleDelete(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
     if (!confirm("Karte wirklich löschen?")) return;
     startTransition(async () => {
       await deleteCard(id);

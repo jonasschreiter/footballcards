@@ -38,6 +38,7 @@ export async function updateCard(id: string, data: CardUpdate) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/cards");
+  revalidatePath(`/cards/${id}`);
 }
 
 export async function deleteCard(id: string) {
@@ -57,4 +58,5 @@ export async function deleteCard(id: string) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/cards");
+  revalidatePath(`/cards/${id}`);
 }
