@@ -26,14 +26,14 @@ export default async function CardsPage() {
   return (
     <div className="space-y-6">
       <div className="form-reveal form-reveal-1 border border-slate-700/80 bg-slate-900/65 rounded-2xl p-4 sm:p-5 shadow-lg shadow-black/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div className="inline-flex items-center h-20 sm:h-24 w-64 sm:w-80 overflow-hidden rounded-xl">
+        <div className="inline-flex items-center h-20 sm:h-24 w-52 sm:w-64 overflow-hidden rounded-xl">
           <Image
             src="/cards-vault-logo.png"
             alt="Cards-Vault Logo"
             width={520}
             height={240}
             priority
-            className="h-full w-full object-contain scale-[1.55]"
+            className="h-full w-full object-cover object-left scale-[1.2]"
           />
         </div>
         <Link
