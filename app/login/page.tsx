@@ -83,6 +83,22 @@ export default function LoginPage() {
             />
           </div>
 
+          {mode === "signup" && (
+            <div>
+              <label className="block text-sm font-medium text-slate-200 mb-1">
+                Einladungscode
+              </label>
+              <input
+                name="invite_code"
+                type="text"
+                required
+                autoComplete="off"
+                className="w-full border border-slate-700 bg-slate-950/80 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                placeholder="Code eingeben"
+              />
+            </div>
+          )}
+
           {error && (
             <p className="text-sm text-red-300 bg-red-950/40 border border-red-800 rounded-lg px-3 py-2">
               {error}

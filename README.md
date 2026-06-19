@@ -27,7 +27,10 @@ NEXT_PUBLIC_SUPABASE_URL=https://<dein-projekt>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon-key>
 OPENAI_API_KEY=<dein-openai-api-key>
 OPENAI_MODEL=gpt-4.1-mini
+SIGNUP_INVITE_CODE=<dein-einladungscode>
 ```
+
+Hinweis: Für neue Registrierungen wird `SIGNUP_INVITE_CODE` serverseitig geprüft.
 
 ### 2. Datenbank-Migration
 Führe diese Dateien in deinem Supabase SQL Editor aus (in dieser Reihenfolge):
