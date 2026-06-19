@@ -4,11 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { createCard, updateCard } from "@/lib/actions/cards";
-import { createClient } from "@/lib/supabase/client";
 import type { Card, CardInsert } from "@/lib/types";
 
 interface Props {
   card?: Card;
+  previewImageUrl?: string | null;
 }
 
 const CONDITIONS: { value: Card["condition"]; label: string }[] = [
@@ -25,7 +25,7 @@ const SEASONS = Array.from({ length: 9 }, (_, i) => {
   return `${startYear}/${endYear}`;
 });
 
-export default function CardForm({ card }: Props) {
+export default function CardForm({ card, previewImageUrl }: Props) {
   const router = useRouter();
   const isEdit = !!card;
   const [error, setError] = useState<string | null>(null);
@@ -107,7 +107,6 @@ export default function CardForm({ card }: Props) {
     setError(null);
 
     const fd = new FormData(e.currentTarget);
-    const supabase = createClient();
 
     const isPsaGraded = fd.get("psa_graded") === "on";
     const isRookieCard = fd.get("rookie_card") === "on";
@@ -131,40 +130,26 @@ export default function CardForm({ card }: Props) {
     const imageFile = fd.get("image_file");
 
     if (imageFile instanceof File && imageFile.size > 0) {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const uploadFd = new FormData();
+      uploadFd.append("image", imageFile);
 
-      if (!user) {
-        setError("Bitte melde dich erneut an, bevor du ein Bild hochlaedst.");
+      const uploadResponse = await fetch("/api/cards/upload-image", {
+        method: "POST",
+        body: uploadFd,
+      });
+
+      const uploadPayload = (await uploadResponse.json()) as {
+        error?: string;
+        path?: string;
+      };
+
+      if (!uploadResponse.ok || !uploadPayload.path) {
+        setError(uploadPayload.error ?? "Bild-Upload fehlgeschlagen.");
         setLoading(false);
         return;
       }
 
-      const extension = (imageFile.name.split(".").pop() || "jpg")
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, "");
-      const filePath = `${user.id}/${crypto.randomUUID()}.${extension || "jpg"}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("card-images")
-        .upload(filePath, imageFile, {
-          cacheControl: "3600",
-          upsert: false,
-          contentType: imageFile.type || undefined,
-        });
-
-      if (uploadError) {
-        setError(`Bild-Upload fehlgeschlagen: ${uploadError.message}`);
-        setLoading(false);
-        return;
-      }
-
-      const { data: publicUrlData } = supabase.storage
-        .from("card-images")
-        .getPublicUrl(filePath);
-
-      imageUrl = publicUrlData.publicUrl;
+      imageUrl = uploadPayload.path;
     }
 
     const data: CardInsert = {
@@ -230,13 +215,13 @@ export default function CardForm({ card }: Props) {
         )}
       </div>
 
-      {card?.image_url && (
+      {previewImageUrl && (
         <div className="form-reveal form-reveal-2 border border-slate-700/80 bg-slate-900/45 rounded-2xl p-4">
           <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
             <span className="text-cyan-300 mr-1">◫</span>Aktuelles Bild
           </label>
           <Image
-            src={card.image_url}
+            src={previewImageUrl}
             alt={`Karte von ${card.player_name}`}
             width={512}
             height={320}

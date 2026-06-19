@@ -7,6 +7,7 @@ Eine Next.js App (App Router, TypeScript, Tailwind CSS) mit Supabase Auth und ei
 - **Login / Registrierung** via Supabase Auth (E-Mail + Passwort)
 - **Kartenliste** - zeigt alle eigenen Karten (RLS: jede Karte gehört `auth.uid()`)
 - **Karte anlegen** - Formular mit Spieler, Team, Saison (z.B. "18/19"), Zustand, Notizen und Bild-Upload (kein Bild-URL-Feld)
+- **Sicherer Bild-Upload** - serverseitige Validierung (Magic Bytes + 10 MB Limit) vor dem Speichern in Supabase Storage
 - **Rookie Flag** - Rookie Card per Checkbox setzen (gelbes Rookie-Badge in der Liste)
 - **PSA-Grade** - optional per Checkbox mit Dropdown-Auswahl von 0 bis 10
 - **Auto-Erkennung** - Bildauswahl kann Felder automatisch per KI vorbefuellen
@@ -38,9 +39,12 @@ Führe diese Dateien in deinem Supabase SQL Editor aus (in dieser Reihenfolge):
 1. `supabase/migrations/20260619_cards.sql`
 2. `supabase/migrations/20260619_psa_grade.sql`
 3. `supabase/migrations/20260619_storage.sql`
-4. `supabase/migrations/20260619_season_format.sql` (ändert year-Feld zu Text für Saison-Format wie "18/19")
-5. `supabase/migrations/20260619_rookie_flag.sql`
-6. `supabase/migrations/20260619_card_values.sql`
+4. `supabase/migrations/20260619_storage_private.sql` (macht Bucket privat; Bilder werden per signierter URL geladen)
+5. `supabase/migrations/20260619_storage_path_normalize.sql` (konvertiert alte public/authenticated/sign URLs in interne Storage-Pfade)
+6. `supabase/migrations/20260619_season_format.sql` (ändert year-Feld zu Text für Saison-Format wie "18/19")
+7. `supabase/migrations/20260619_rookie_flag.sql`
+8. `supabase/migrations/20260619_card_values.sql`
+9. `supabase/migrations/20260619_api_rate_limits.sql` (persistentes User-Rate-Limit für API-Endpunkte wie Kartenerkennung)
 
 ### 3. Supabase Storage
 Prüfe in Supabase unter **Storage**, dass der Bucket `card-images` existiert.

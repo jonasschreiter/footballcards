@@ -1,5 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 
+const RECOGNIZE_RATE_LIMIT_SCOPE = "cards_recognize";
+const RECOGNIZE_RATE_LIMIT_MAX_REQUESTS = 15;
+const RECOGNIZE_RATE_LIMIT_WINDOW_SECONDS = 60;
+
 const CARD_CONDITIONS = ["mint", "near_mint", "excellent", "good", "poor"] as const;
 
 type CardCondition = (typeof CARD_CONDITIONS)[number];
@@ -124,6 +128,39 @@ function extractStructuredResult(payload: unknown): unknown | null {
   return null;
 }
 
+async function checkRateLimit(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string
+): Promise<{ allowed: boolean; retryAfterSeconds: number }> {
+  const { data, error } = await supabase.rpc("consume_api_rate_limit", {
+    p_user_id: userId,
+    p_scope: RECOGNIZE_RATE_LIMIT_SCOPE,
+    p_max_requests: RECOGNIZE_RATE_LIMIT_MAX_REQUESTS,
+    p_window_seconds: RECOGNIZE_RATE_LIMIT_WINDOW_SECONDS,
+  });
+
+  if (error) {
+    console.error("Rate limit RPC failed", { message: error.message });
+    return { allowed: true, retryAfterSeconds: 0 };
+  }
+
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row || typeof row !== "object") {
+    return { allowed: true, retryAfterSeconds: 0 };
+  }
+
+  const allowed = (row as { allowed?: unknown }).allowed;
+  const retryAfterSecondsRaw = (row as { retry_after_seconds?: unknown }).retry_after_seconds;
+
+  return {
+    allowed: allowed === true,
+    retryAfterSeconds:
+      typeof retryAfterSecondsRaw === "number"
+        ? Math.max(0, Math.ceil(retryAfterSecondsRaw))
+        : 0,
+  };
+}
+
 export async function POST(request: Request) {
   try {
     const supabase = await createClient();
@@ -133,6 +170,22 @@ export async function POST(request: Request) {
 
     if (!user) {
       return Response.json({ error: "Nicht angemeldet." }, { status: 401 });
+    }
+
+    const rateLimit = await checkRateLimit(supabase, user.id);
+    if (!rateLimit.allowed) {
+      return Response.json(
+        {
+          error:
+            "Zu viele Erkennungsanfragen. Bitte warte kurz und versuche es erneut.",
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.retryAfterSeconds),
+          },
+        }
+      );
     }
 
     const apiKey = process.env.OPENAI_API_KEY;
@@ -240,8 +293,12 @@ export async function POST(request: Request) {
 
     if (!response.ok) {
       const errorText = await response.text();
+      console.error("OpenAI recognize request failed", {
+        status: response.status,
+        body: errorText.slice(0, 500),
+      });
       return Response.json(
-        { error: `Erkennung fehlgeschlagen: ${errorText}` },
+        { error: "Erkennung fehlgeschlagen. Bitte versuche es erneut." },
         { status: 502 }
       );
     }

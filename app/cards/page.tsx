@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { resolveCardImageUrl } from "@/lib/supabase/storage";
 
 export const dynamic = "force-dynamic";
 import type { Card } from "@/lib/types";
@@ -22,6 +23,13 @@ export default async function CardsPage() {
     .order("created_at", { ascending: false });
 
   if (error) throw new Error(error.message);
+
+  const cardsWithSignedImageUrl = await Promise.all(
+    ((cards ?? []) as Card[]).map(async (card) => ({
+      ...card,
+      image_url: await resolveCardImageUrl(supabase, card.image_url),
+    }))
+  );
 
   return (
     <div className="space-y-6">
@@ -44,7 +52,7 @@ export default async function CardsPage() {
         </Link>
       </div>
 
-      <CardsSearchPanel cards={(cards ?? []) as Card[]} />
+      <CardsSearchPanel cards={cardsWithSignedImageUrl} />
     </div>
   );
 }

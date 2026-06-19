@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { resolveCardImageUrl } from "@/lib/supabase/storage";
 import DeleteCardButton from "@/components/DeleteCardButton";
 import CardValueForm from "@/components/CardValueForm";
 import type { Card } from "@/lib/types";
@@ -47,6 +48,7 @@ export default async function CardDetailPage({ params }: Props) {
   if (error || !card) notFound();
 
   const typedCard = card as Card;
+  const signedImageUrl = await resolveCardImageUrl(supabase, typedCard.image_url);
 
   return (
     <div className="space-y-6">
@@ -73,9 +75,9 @@ export default async function CardDetailPage({ params }: Props) {
       </div>
 
       <section className="form-reveal form-reveal-2 rounded-2xl border border-slate-700/80 bg-slate-900/70 p-4 sm:p-5 space-y-4">
-        {typedCard.image_url && (
+        {signedImageUrl && (
           <Image
-            src={typedCard.image_url}
+            src={signedImageUrl}
             alt={`Karte von ${typedCard.player_name}`}
             width={960}
             height={640}
