@@ -27,6 +27,9 @@ export default function LoginPage() {
         setError("Registrierung fehlgeschlagen. Bitte Eingaben prüfen.");
       }
     } catch {
+      // Successful login triggers a framework redirect error for navigation flow.
+      // Do not surface this as a user-facing error.
+      if (mode === "login") return;
       setError("Aktion fehlgeschlagen. Bitte versuche es erneut.");
     }
 
