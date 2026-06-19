@@ -193,10 +193,10 @@ export default function CardForm({ card }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl w-full">
-      <div className="border border-slate-700/80 bg-slate-900/65 rounded-2xl p-5 shadow-lg shadow-black/20">
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl w-full pb-24 sm:pb-0">
+      <div className="form-reveal form-reveal-1 border border-slate-700/80 bg-slate-900/65 rounded-2xl p-5 shadow-lg shadow-black/20">
         <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
-          Bild hochladen *
+          <span className="text-emerald-300 mr-1">◈</span>Bild hochladen *
         </label>
         <input
           name="image_file"
@@ -225,9 +225,9 @@ export default function CardForm({ card }: Props) {
       </div>
 
       {card?.image_url && (
-        <div className="border border-slate-700/80 bg-slate-900/45 rounded-2xl p-4">
+        <div className="form-reveal form-reveal-2 border border-slate-700/80 bg-slate-900/45 rounded-2xl p-4">
           <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
-            Aktuelles Bild
+            <span className="text-cyan-300 mr-1">◫</span>Aktuelles Bild
           </label>
           <Image
             src={card.image_url}
@@ -242,10 +242,10 @@ export default function CardForm({ card }: Props) {
 
       {showDataFields && (
         <>
-          <div className="grid sm:grid-cols-2 gap-4 rounded-2xl border border-slate-700/70 bg-slate-900/45 p-4 sm:p-5">
+          <div className="form-reveal form-reveal-3 grid sm:grid-cols-2 gap-4 rounded-2xl border border-slate-700/70 bg-slate-900/45 p-4 sm:p-5">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
-                Spielername *
+                <span className="text-emerald-300 mr-1">◉</span>Spielername *
               </label>
               <input
                 name="player_name"
@@ -257,7 +257,7 @@ export default function CardForm({ card }: Props) {
             </div>
             <div>
               <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
-                Team *
+                <span className="text-cyan-300 mr-1">◆</span>Team *
               </label>
               <input
                 name="team"
@@ -269,10 +269,10 @@ export default function CardForm({ card }: Props) {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4 rounded-2xl border border-slate-700/70 bg-slate-900/45 p-4 sm:p-5">
+          <div className="form-reveal form-reveal-4 grid sm:grid-cols-2 gap-4 rounded-2xl border border-slate-700/70 bg-slate-900/45 p-4 sm:p-5">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
-                Saison *
+                <span className="text-violet-300 mr-1">◍</span>Saison *
               </label>
               <select
                 name="year"
@@ -291,7 +291,7 @@ export default function CardForm({ card }: Props) {
             </div>
             <div>
               <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
-                Zustand *
+                <span className="text-amber-300 mr-1">◌</span>Zustand *
               </label>
               <select
                 name="condition"
@@ -309,9 +309,9 @@ export default function CardForm({ card }: Props) {
             </div>
           </div>
 
-          <div className="space-y-4 border border-slate-700/80 bg-slate-900/70 rounded-2xl p-4 sm:p-5">
+          <div className="form-reveal form-reveal-5 space-y-4 border border-slate-700/80 bg-slate-900/70 rounded-2xl p-4 sm:p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-300">
-              Zusätzliche Merkmale
+              <span className="text-emerald-300 mr-1">✦</span>Zusätzliche Merkmale
             </p>
 
             <div className="grid sm:grid-cols-2 gap-3">
@@ -363,9 +363,9 @@ export default function CardForm({ card }: Props) {
             )}
           </div>
 
-          <div className="rounded-2xl border border-slate-700/70 bg-slate-900/45 p-4 sm:p-5">
+          <div className="form-reveal form-reveal-6 rounded-2xl border border-slate-700/70 bg-slate-900/45 p-4 sm:p-5">
             <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
-              Notizen
+              <span className="text-cyan-300 mr-1">✎</span>Notizen
             </label>
             <textarea
               name="notes"
@@ -384,7 +384,28 @@ export default function CardForm({ card }: Props) {
         </p>
       )}
 
-      <div className="flex flex-col-reverse sm:flex-row gap-3 pt-1">
+      {showDataFields && (
+        <div className="sm:hidden fixed bottom-0 inset-x-0 z-30 border-t border-slate-700/80 bg-slate-950/95 backdrop-blur px-3 py-3">
+          <div className="max-w-2xl mx-auto flex gap-2">
+            <button
+              type="submit"
+              disabled={loading || recognizing}
+              className="flex-1 bg-gradient-to-r from-emerald-400 to-teal-300 hover:from-emerald-300 hover:to-teal-200 disabled:opacity-60 text-slate-950 font-semibold px-4 py-2.5 rounded-xl transition-colors"
+            >
+              {loading ? "Speichert…" : isEdit ? "Speichern" : "Karte anlegen"}
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push("/cards")}
+              className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-900/70 text-slate-200"
+            >
+              Abbrechen
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="hidden sm:flex flex-col-reverse sm:flex-row gap-3 pt-1">
         {showDataFields && (
           <button
             type="submit"

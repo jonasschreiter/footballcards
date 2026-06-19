@@ -39,3 +39,25 @@ h3 {
   background: #22c55e66;
   color: #f8fafc;
 }
+
+@keyframes form-fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.form-reveal {
+  animation: form-fade-up 0.45s ease-out both;
+}
+
+.form-reveal-1 { animation-delay: 0.03s; }
+.form-reveal-2 { animation-delay: 0.08s; }
+.form-reveal-3 { animation-delay: 0.12s; }
+.form-reveal-4 { animation-delay: 0.16s; }
+.form-reveal-5 { animation-delay: 0.2s; }
+.form-reveal-6 { animation-delay: 0.24s; }
