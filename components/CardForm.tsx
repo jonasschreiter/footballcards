@@ -30,6 +30,7 @@ export default function CardForm({ card }: Props) {
   const isEdit = !!card;
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [recognizing, setRecognizing] = useState(false);
   const [recognitionConfidence, setRecognitionConfidence] = useState<number | null>(null);
   const [analysisDone, setAnalysisDone] = useState(isEdit);
@@ -184,17 +185,20 @@ export default function CardForm({ card }: Props) {
       } else {
         await createCard(data);
       }
+      setSaved(true);
+      await new Promise((resolve) => setTimeout(resolve, 450));
       router.push("/cards");
       router.refresh();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Unbekannter Fehler");
       setLoading(false);
+      setSaved(false);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl w-full pb-24 sm:pb-0">
-      <div className="form-reveal form-reveal-1 border border-slate-700/80 bg-slate-900/65 rounded-2xl p-5 shadow-lg shadow-black/20">
+    <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6 max-w-2xl w-full pb-24 sm:pb-0">
+      <div className="form-reveal form-reveal-1 border border-slate-700/80 bg-slate-900/65 rounded-2xl p-4 sm:p-5 shadow-lg shadow-black/20">
         <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
           <span className="text-emerald-300 mr-1">◈</span>Bild hochladen *
         </label>
@@ -209,7 +213,7 @@ export default function CardForm({ card }: Props) {
               void recognizeCard(file);
             }
           }}
-          className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2 text-sm file:mr-3 file:px-4 file:py-2 file:rounded-lg file:border-0 file:bg-emerald-500/20 file:text-emerald-200 file:font-semibold"
+          className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2 text-sm file:mr-3 file:px-4 file:py-2 file:rounded-lg file:border-0 file:bg-emerald-500/20 file:text-emerald-200 file:font-semibold"
         />
         {!isEdit && !showDataFields && (
           <p className="text-xs text-slate-400 mt-3 leading-relaxed">
@@ -252,7 +256,7 @@ export default function CardForm({ card }: Props) {
                 required
                 value={playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
-                className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
             <div>
@@ -264,7 +268,7 @@ export default function CardForm({ card }: Props) {
                 required
                 value={team}
                 onChange={(e) => setTeam(e.target.value)}
-                className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
           </div>
@@ -279,7 +283,7 @@ export default function CardForm({ card }: Props) {
                 required
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
-                className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 <option value="">Saison wählen...</option>
                 {SEASONS.map((season) => (
@@ -298,7 +302,7 @@ export default function CardForm({ card }: Props) {
                 required
                 value={condition}
                 onChange={(e) => setCondition(e.target.value as Card["condition"])}
-                className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 {CONDITIONS.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -350,7 +354,7 @@ export default function CardForm({ card }: Props) {
                   onChange={(e) =>
                     setPsaGrade(e.target.value ? Number.parseInt(e.target.value, 10) : null)
                   }
-                  className="w-full sm:w-56 border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="premium-field w-full sm:w-56 border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="">Bitte waehlen</option>
                   {Array.from({ length: 11 }, (_, grade) => (
@@ -372,7 +376,7 @@ export default function CardForm({ card }: Props) {
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+              className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
             />
           </div>
         </>
@@ -392,7 +396,7 @@ export default function CardForm({ card }: Props) {
               disabled={loading || recognizing}
               className="flex-1 bg-gradient-to-r from-emerald-400 to-teal-300 hover:from-emerald-300 hover:to-teal-200 disabled:opacity-60 text-slate-950 font-semibold px-4 py-2.5 rounded-xl transition-colors"
             >
-              {loading ? "Speichert…" : isEdit ? "Speichern" : "Karte anlegen"}
+              {saved ? "Gespeichert" : loading ? "Speichert…" : isEdit ? "Speichern" : "Karte anlegen"}
             </button>
             <button
               type="button"
@@ -412,7 +416,7 @@ export default function CardForm({ card }: Props) {
             disabled={loading || recognizing}
             className="bg-gradient-to-r from-emerald-400 to-teal-300 hover:from-emerald-300 hover:to-teal-200 disabled:opacity-60 text-slate-950 font-semibold px-6 py-2.5 rounded-xl transition-colors w-full sm:w-auto"
           >
-            {loading ? "Speichert…" : isEdit ? "Speichern" : "Karte anlegen"}
+            {saved ? "Gespeichert" : loading ? "Speichert…" : isEdit ? "Speichern" : "Karte anlegen"}
           </button>
         )}
         <button
