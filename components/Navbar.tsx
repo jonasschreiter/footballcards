@@ -30,11 +30,11 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-green-700 text-white shadow-md">
+    <nav className="bg-slate-950/80 text-slate-100 border-b border-slate-800 backdrop-blur-md shadow-lg shadow-black/20">
       <div className="max-w-5xl mx-auto px-3 sm:px-4 py-3 sm:h-14 flex flex-wrap sm:flex-nowrap items-center gap-3 sm:gap-4 justify-between">
         <Link
           href="/cards"
-          className="font-bold text-base sm:text-lg tracking-tight hover:text-green-200 transition-colors"
+          className="font-bold text-base sm:text-lg tracking-tight hover:text-emerald-300 transition-colors"
         >
           ⚽ Karten-Katalog
         </Link>
@@ -43,20 +43,20 @@ export default function Navbar() {
             <>
               <Link
                 href="/cards/new"
-                className="hover:text-green-200 transition-colors px-2 py-1 rounded-md border border-green-500/30"
+                className="hover:text-emerald-300 transition-colors px-2 py-1 rounded-md border border-emerald-400/30 bg-emerald-500/10"
               >
                 + Neue Karte
               </Link>
-              <span className="text-green-200 hidden lg:inline max-w-52 truncate">{email}</span>
+              <span className="text-slate-400 hidden lg:inline max-w-52 truncate">{email}</span>
               <button
                 onClick={handleLogout}
-                className="bg-green-800 hover:bg-green-900 px-3 py-1.5 rounded transition-colors"
+                className="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-3 py-1.5 rounded font-semibold transition-colors"
               >
                 Abmelden
               </button>
             </>
           ) : (
-            <Link href="/login" className="hover:text-green-200 transition-colors">
+            <Link href="/login" className="hover:text-emerald-300 transition-colors">
               Anmelden
             </Link>
           )}

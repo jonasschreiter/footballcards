@@ -189,8 +189,8 @@ export default function CardForm({ card }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-w-lg w-full">
-      <div className="border border-gray-200 rounded-lg p-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+      <div className="border border-slate-700 bg-slate-900/70 rounded-lg p-4">
+        <label className="block text-sm font-medium text-slate-200 mb-1">
           Bild hochladen *
         </label>
         <input
@@ -204,16 +204,16 @@ export default function CardForm({ card }: Props) {
               void recognizeCard(file);
             }
           }}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm file:mr-3 file:px-3 file:py-1.5 file:rounded-md file:border-0 file:bg-green-50 file:text-green-700 file:font-medium"
+          className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-lg px-3 py-2 text-sm file:mr-3 file:px-3 file:py-1.5 file:rounded-md file:border-0 file:bg-emerald-500/20 file:text-emerald-300 file:font-medium"
         />
         {!isEdit && !showDataFields && (
-          <p className="text-xs text-gray-600 mt-2">
+          <p className="text-xs text-slate-400 mt-2">
             Nach dem Upload analysiert die App das Foto und blendet danach alle Felder zum Bearbeiten ein.
           </p>
         )}
-        {recognizing && <p className="text-xs text-green-700 mt-2">Erkennung laeuft...</p>}
+        {recognizing && <p className="text-xs text-emerald-300 mt-2">Erkennung laeuft...</p>}
         {recognitionConfidence !== null && !recognizing && (
-          <p className="text-xs text-gray-600 mt-2">
+          <p className="text-xs text-slate-400 mt-2">
             Erkennungs-Sicherheit: {Math.round(recognitionConfidence * 100)}%
           </p>
         )}
@@ -221,7 +221,7 @@ export default function CardForm({ card }: Props) {
 
       {card?.image_url && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-slate-200 mb-1">
             Aktuelles Bild
           </label>
           <Image
@@ -230,7 +230,7 @@ export default function CardForm({ card }: Props) {
             width={512}
             height={320}
             unoptimized
-            className="w-full h-auto max-h-96 object-contain rounded-lg border border-gray-200"
+            className="w-full h-auto max-h-96 object-contain rounded-lg border border-slate-700"
           />
         </div>
       )}
@@ -239,7 +239,7 @@ export default function CardForm({ card }: Props) {
         <>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-200 mb-1">
                 Spielername *
               </label>
               <input
@@ -247,11 +247,11 @@ export default function CardForm({ card }: Props) {
                 required
                 value={playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+                className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-200 mb-1">
                 Team *
               </label>
               <input
@@ -259,14 +259,14 @@ export default function CardForm({ card }: Props) {
                 required
                 value={team}
                 onChange={(e) => setTeam(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+                className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-200 mb-1">
                 Saison *
               </label>
               <select
@@ -274,7 +274,7 @@ export default function CardForm({ card }: Props) {
                 required
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+                className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 <option value="">Saison wählen...</option>
                 {SEASONS.map((season) => (
@@ -285,7 +285,7 @@ export default function CardForm({ card }: Props) {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-200 mb-1">
                 Zustand *
               </label>
               <select
@@ -293,7 +293,7 @@ export default function CardForm({ card }: Props) {
                 required
                 value={condition}
                 onChange={(e) => setCondition(e.target.value as Card["condition"])}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+                className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 {CONDITIONS.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -304,21 +304,21 @@ export default function CardForm({ card }: Props) {
             </div>
           </div>
 
-          <div className="space-y-3 border border-gray-200 rounded-lg p-4">
-            <label className="inline-flex items-center gap-2 text-sm font-medium text-gray-700">
+          <div className="space-y-3 border border-slate-700 bg-slate-900/70 rounded-lg p-4">
+            <label className="inline-flex items-center gap-2 text-sm font-medium text-slate-200">
               <input
                 name="psa_graded"
                 type="checkbox"
                 checked={psaGraded}
                 onChange={(e) => setPsaGraded(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-green-700 focus:ring-green-600"
+                className="h-4 w-4 rounded border-slate-600 bg-slate-950 text-emerald-500 focus:ring-emerald-500"
               />
               PSA-Grade?
             </label>
 
             {psaGraded && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-slate-200 mb-1">
                   PSA Grade
                 </label>
                 <select
@@ -328,7 +328,7 @@ export default function CardForm({ card }: Props) {
                   onChange={(e) =>
                     setPsaGrade(e.target.value ? Number.parseInt(e.target.value, 10) : null)
                   }
-                  className="w-full sm:w-48 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+                  className="w-full sm:w-48 border border-slate-700 bg-slate-950/70 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="">Bitte waehlen</option>
                   {Array.from({ length: 11 }, (_, grade) => (
@@ -342,7 +342,7 @@ export default function CardForm({ card }: Props) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-200 mb-1">
               Notizen
             </label>
             <textarea
@@ -350,14 +350,14 @@ export default function CardForm({ card }: Props) {
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600 resize-none"
+              className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
             />
           </div>
         </>
       )}
 
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+        <p className="text-sm text-red-300 bg-red-950/40 border border-red-800 rounded-lg px-3 py-2">
           {error}
         </p>
       )}
@@ -367,7 +367,7 @@ export default function CardForm({ card }: Props) {
           <button
             type="submit"
             disabled={loading || recognizing}
-            className="bg-green-700 hover:bg-green-800 disabled:opacity-60 text-white font-medium px-5 py-2 rounded-lg transition-colors w-full sm:w-auto"
+            className="bg-emerald-500 hover:bg-emerald-400 disabled:opacity-60 text-slate-950 font-semibold px-5 py-2 rounded-lg transition-colors w-full sm:w-auto"
           >
             {loading ? "Speichert…" : isEdit ? "Speichern" : "Karte anlegen"}
           </button>
@@ -375,7 +375,7 @@ export default function CardForm({ card }: Props) {
         <button
           type="button"
           onClick={() => router.push("/cards")}
-          className="text-gray-600 hover:text-gray-900 font-medium px-4 py-2 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors w-full sm:w-auto"
+          className="text-slate-300 hover:text-slate-100 font-medium px-4 py-2 rounded-lg border border-slate-700 hover:border-slate-500 transition-colors w-full sm:w-auto"
         >
           Abbrechen
         </button>

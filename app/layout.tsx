@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Manrope, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const appSans = Manrope({
+  variable: "--font-app-sans",
+  subsets: ["latin"],
+});
+
+const appDisplay = Space_Grotesk({
+  variable: "--font-app-display",
   subsets: ["latin"],
 });
 
@@ -24,8 +29,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de" className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-      <body className="min-h-screen bg-gray-50">
+    <html
+      lang="de"
+      className={`${appSans.variable} ${appDisplay.variable} ${geistMono.variable} antialiased`}
+    >
+      <body className="min-h-screen">
         <Navbar />
         <main className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-8">{children}</main>
       </body>

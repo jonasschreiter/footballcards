@@ -29,7 +29,7 @@ export default async function EditCardPage({ params }: Props) {
 
   return (
     <div>
-      <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5 sm:mb-6">
+      <h1 className="text-xl sm:text-2xl font-bold text-slate-100 mb-5 sm:mb-6">
         Karte bearbeiten
       </h1>
       <CardForm card={card as Card} />

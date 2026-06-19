@@ -28,19 +28,19 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center">
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-md p-8">
-        <h1 className="text-2xl font-bold mb-6 text-center text-green-700">
+      <div className="w-full max-w-sm bg-slate-900/85 border border-slate-700 rounded-2xl shadow-xl shadow-black/30 p-8 backdrop-blur-sm">
+        <h1 className="text-2xl font-bold mb-6 text-center text-emerald-300">
           ⚽ Karten-Katalog
         </h1>
 
-        <div className="flex rounded-lg overflow-hidden border border-gray-200 mb-6">
+        <div className="flex rounded-lg overflow-hidden border border-slate-700 mb-6">
           <button
             type="button"
             onClick={() => setMode("login")}
             className={`flex-1 py-2 text-sm font-medium transition-colors ${
               mode === "login"
-                ? "bg-green-700 text-white"
-                : "bg-white text-gray-600 hover:bg-gray-50"
+                ? "bg-emerald-500 text-slate-950"
+                : "bg-slate-900 text-slate-400 hover:bg-slate-800"
             }`}
           >
             Anmelden
@@ -50,8 +50,8 @@ export default function LoginPage() {
             onClick={() => setMode("signup")}
             className={`flex-1 py-2 text-sm font-medium transition-colors ${
               mode === "signup"
-                ? "bg-green-700 text-white"
-                : "bg-white text-gray-600 hover:bg-gray-50"
+                ? "bg-emerald-500 text-slate-950"
+                : "bg-slate-900 text-slate-400 hover:bg-slate-800"
             }`}
           >
             Registrieren
@@ -60,7 +60,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-200 mb-1">
               E-Mail
             </label>
             <input
@@ -68,11 +68,11 @@ export default function LoginPage() {
               type="email"
               required
               autoComplete="email"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+              className="w-full border border-slate-700 bg-slate-950/80 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-200 mb-1">
               Passwort
             </label>
             <input
@@ -81,17 +81,17 @@ export default function LoginPage() {
               required
               autoComplete={mode === "login" ? "current-password" : "new-password"}
               minLength={6}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+              className="w-full border border-slate-700 bg-slate-950/80 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
 
           {error && (
-            <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+            <p className="text-sm text-red-300 bg-red-950/40 border border-red-800 rounded-lg px-3 py-2">
               {error}
             </p>
           )}
           {message && (
-            <p className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+            <p className="text-sm text-emerald-300 bg-emerald-950/40 border border-emerald-800 rounded-lg px-3 py-2">
               {message}
             </p>
           )}
@@ -99,7 +99,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-700 hover:bg-green-800 disabled:opacity-60 text-white font-medium py-2 rounded-lg transition-colors"
+            className="w-full bg-emerald-500 hover:bg-emerald-400 disabled:opacity-60 text-slate-950 font-semibold py-2 rounded-lg transition-colors"
           >
             {loading ? "Lädt…" : mode === "login" ? "Anmelden" : "Konto erstellen"}
           </button>

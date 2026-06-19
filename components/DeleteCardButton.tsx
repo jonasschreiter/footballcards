@@ -17,7 +17,7 @@ export default function DeleteCardButton({ id }: { id: string }) {
     <button
       onClick={handleDelete}
       disabled={isPending}
-      className="flex-1 text-center text-sm text-red-500 hover:text-red-700 font-medium transition-colors disabled:opacity-50"
+      className="flex-1 text-center text-sm text-rose-300 hover:text-rose-200 font-medium transition-colors disabled:opacity-50"
     >
       {isPending ? "Löscht…" : "Löschen"}
     </button>
