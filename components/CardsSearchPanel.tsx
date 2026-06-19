@@ -72,20 +72,23 @@ export default function CardsSearchPanel({ cards }: Props) {
 
   return (
     <>
-      <section className="mb-6 rounded-2xl border border-slate-800 bg-slate-900/75 p-4 sm:p-5 shadow-lg shadow-black/20">
+      <section className="form-reveal form-reveal-2 mb-6 rounded-2xl border border-slate-700/80 bg-slate-900/70 p-4 sm:p-5 shadow-lg shadow-black/20">
+        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-3">
+          <span className="text-emerald-300 mr-1">◈</span>Suche & Filter
+        </p>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Suche nach Spieler, Verein, Notiz, PSA..."
-            className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 lg:col-span-2"
+            className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 lg:col-span-2"
           />
 
           <select
             value={teamFilter}
             onChange={(e) => setTeamFilter(e.target.value)}
-            className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
           >
             <option value="all">Alle Vereine</option>
             {teams.map((team) => (
@@ -98,7 +101,7 @@ export default function CardsSearchPanel({ cards }: Props) {
           <select
             value={seasonFilter}
             onChange={(e) => setSeasonFilter(e.target.value)}
-            className="w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
           >
             <option value="all">Alle Saisons</option>
             {seasons.map((season) => (
@@ -109,8 +112,8 @@ export default function CardsSearchPanel({ cards }: Props) {
           </select>
         </div>
 
-        <div className="mt-3 flex items-center justify-between gap-3">
-          <label className="inline-flex items-center gap-2 text-sm text-slate-300">
+        <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <label className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-300 cursor-pointer hover:border-amber-500/50 transition-colors">
             <input
               type="checkbox"
               checked={rookieOnly}
@@ -140,7 +143,7 @@ export default function CardsSearchPanel({ cards }: Props) {
       )}
 
       {cards.length > 0 && filteredCards.length === 0 && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-8 text-center text-slate-400">
+        <div className="form-reveal form-reveal-3 rounded-2xl border border-slate-700/70 bg-slate-900/70 px-4 py-8 text-center text-slate-400">
           Keine Karten passend zu deinen Filtern gefunden.
         </div>
       )}
@@ -149,7 +152,7 @@ export default function CardsSearchPanel({ cards }: Props) {
         {filteredCards.map((card) => (
           <div
             key={card.id}
-            className="bg-slate-900/80 rounded-2xl shadow-lg shadow-black/20 border border-slate-800 p-4 sm:p-5 flex flex-col gap-2 hover:border-slate-700 transition-colors"
+            className="form-reveal form-reveal-4 bg-slate-900/80 rounded-2xl shadow-lg shadow-black/20 border border-slate-700/70 p-4 sm:p-5 flex flex-col gap-2 hover:border-slate-500 transition-colors"
           >
             {card.image_url && (
               <Image
@@ -176,7 +179,9 @@ export default function CardsSearchPanel({ cards }: Props) {
                   </p>
                 )}
                 {card.rookie_card && (
-                  <p className="text-xs text-amber-300 font-semibold mt-1">Rookie</p>
+                  <p className="inline-flex w-fit text-xs text-amber-300 font-semibold mt-1 rounded-lg border border-amber-700/70 bg-amber-950/40 px-2 py-0.5">
+                    Rookie
+                  </p>
                 )}
               </div>
               <span
