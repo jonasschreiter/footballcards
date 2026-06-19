@@ -3,7 +3,7 @@ export interface Card {
   user_id: string;
   player_name: string;
   team: string;
-  year: number;
+  year: string;
   condition: "mint" | "near_mint" | "excellent" | "good" | "poor";
   psa_graded: boolean;
   psa_grade: number | null;

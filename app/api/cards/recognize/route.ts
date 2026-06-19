@@ -7,7 +7,7 @@ type CardCondition = (typeof CARD_CONDITIONS)[number];
 interface RecognitionResult {
   player_name: string | null;
   team: string | null;
-  year: number | null;
+  year: string | null;
   condition: CardCondition | null;
   psa_graded: boolean | null;
   psa_grade: number | null;
@@ -31,6 +31,13 @@ function asNullableYear(value: unknown): number | null {
   return value;
 }
 
+function yearToSeason(year: number | null): string | null {
+  if (year === null || year < 1800 || year > 2100) return null;
+  const startYear = year % 100;
+  const endYear = (startYear + 1) % 100;
+  return `${String(startYear).padStart(2, "0")}/${String(endYear).padStart(2, "0")}`;
+}
+
 function asNullableGrade(value: unknown): number | null {
   if (typeof value !== "number" || !Number.isInteger(value)) return null;
   if (value < 0 || value > 10) return null;
@@ -52,7 +59,7 @@ function normalizeResult(payload: unknown): RecognitionResult {
   return {
     player_name: asNullableString(obj.player_name),
     team: asNullableString(obj.team),
-    year: asNullableYear(obj.year),
+    year: yearToSeason(asNullableYear(obj.year)),
     condition: isCondition(obj.condition) ? obj.condition : null,
     psa_graded: psaGraded,
     psa_grade: psaGraded === true ? psaGradeRaw : null,

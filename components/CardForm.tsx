@@ -19,6 +19,12 @@ const CONDITIONS: { value: Card["condition"]; label: string }[] = [
   { value: "poor", label: "Poor" },
 ];
 
+const SEASONS = Array.from({ length: 9 }, (_, i) => {
+  const startYear = 18 + i;
+  const endYear = 19 + i;
+  return `${startYear}/${endYear}`;
+});
+
 export default function CardForm({ card }: Props) {
   const router = useRouter();
   const isEdit = !!card;
@@ -29,7 +35,7 @@ export default function CardForm({ card }: Props) {
   const [analysisDone, setAnalysisDone] = useState(isEdit);
   const [playerName, setPlayerName] = useState(card?.player_name ?? "");
   const [team, setTeam] = useState(card?.team ?? "");
-  const [year, setYear] = useState<number | "">(card?.year ?? "");
+  const [year, setYear] = useState<string>(card?.year ?? "");
   const [condition, setCondition] = useState<Card["condition"]>(card?.condition ?? "excellent");
   const [notes, setNotes] = useState(card?.notes ?? "");
   const [psaGraded, setPsaGraded] = useState(card?.psa_graded ?? false);
@@ -70,7 +76,7 @@ export default function CardForm({ card }: Props) {
 
       if (payload.data.player_name) setPlayerName(payload.data.player_name);
       if (payload.data.team) setTeam(payload.data.team);
-      if (payload.data.year) setYear(payload.data.year);
+      if (payload.data.year) setYear(String(payload.data.year));
       if (payload.data.condition) setCondition(payload.data.condition);
       if (payload.data.notes) setNotes(payload.data.notes);
 
@@ -104,8 +110,8 @@ export default function CardForm({ card }: Props) {
     const psaGrade =
       isPsaGraded && rawPsaGrade ? Number.parseInt(rawPsaGrade, 10) : null;
 
-    if (year === "") {
-      setError("Bitte gib eine Saison an.");
+    if (!year || year === "") {
+      setError("Bitte wähle eine Saison aus.");
       setLoading(false);
       return;
     }
@@ -261,19 +267,20 @@ export default function CardForm({ card }: Props) {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Saison *
               </label>
-              <input
+              <select
                 name="year"
-                type="number"
                 required
-                min={1900}
-                max={new Date().getFullYear() + 1}
                 value={year}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setYear(val === "" ? "" : Number.parseInt(val, 10) || "");
-                }}
+                onChange={(e) => setYear(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
-              />
+              >
+                <option value="">Saison wählen...</option>
+                {SEASONS.map((season) => (
+                  <option key={season} value={season}>
+                    {season}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
