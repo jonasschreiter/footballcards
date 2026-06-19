@@ -61,7 +61,7 @@ export default function CardForm({ card }: Props) {
         data?: {
           player_name: string | null;
           team: string | null;
-          year: number | null;
+          year: string | null;
           condition: Card["condition"] | null;
           psa_graded: boolean | null;
           psa_grade: number | null;
@@ -76,7 +76,7 @@ export default function CardForm({ card }: Props) {
 
       if (payload.data.player_name) setPlayerName(payload.data.player_name);
       if (payload.data.team) setTeam(payload.data.team);
-      if (payload.data.year) setYear(String(payload.data.year));
+      if (payload.data.year) setYear(payload.data.year);
       if (payload.data.condition) setCondition(payload.data.condition);
       if (payload.data.notes) setNotes(payload.data.notes);
 
@@ -179,6 +179,8 @@ export default function CardForm({ card }: Props) {
       } else {
         await createCard(data);
       }
+      router.push("/cards");
+      router.refresh();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Unbekannter Fehler");
       setLoading(false);

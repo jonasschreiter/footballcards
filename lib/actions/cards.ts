@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { CardInsert, CardUpdate } from "@/lib/types";
 
@@ -11,7 +10,7 @@ export async function createCard(data: CardInsert) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) throw new Error("Nicht angemeldet.");
 
   const { error } = await supabase
     .from("cards")
@@ -20,7 +19,6 @@ export async function createCard(data: CardInsert) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/cards");
-  redirect("/cards");
 }
 
 export async function updateCard(id: string, data: CardUpdate) {
@@ -29,7 +27,7 @@ export async function updateCard(id: string, data: CardUpdate) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) throw new Error("Nicht angemeldet.");
 
   const { error } = await supabase
     .from("cards")
@@ -40,7 +38,6 @@ export async function updateCard(id: string, data: CardUpdate) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/cards");
-  redirect("/cards");
 }
 
 export async function deleteCard(id: string) {
@@ -49,7 +46,7 @@ export async function deleteCard(id: string) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) throw new Error("Nicht angemeldet.");
 
   const { error } = await supabase
     .from("cards")
