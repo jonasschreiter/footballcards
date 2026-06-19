@@ -41,11 +41,11 @@ export default async function CardsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Meine Karten</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Meine Karten</h1>
         <Link
           href="/cards/new"
-          className="bg-green-700 hover:bg-green-800 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          className="inline-flex items-center justify-center bg-green-700 hover:bg-green-800 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors w-full sm:w-auto"
         >
           + Neue Karte
         </Link>
@@ -69,7 +69,7 @@ export default async function CardsPage() {
         {cards?.map((card: Card) => (
           <div
             key={card.id}
-            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col gap-2 hover:shadow-md transition-shadow"
+            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col gap-2 hover:shadow-md transition-shadow"
           >
             {card.image_url && (
               <Image
@@ -110,7 +110,7 @@ export default async function CardsPage() {
             <div className="flex gap-2 mt-auto pt-2 border-t border-gray-100">
               <Link
                 href={`/cards/${card.id}/edit`}
-                className="flex-1 text-center text-sm text-green-700 hover:text-green-900 font-medium transition-colors"
+                className="flex-1 text-center text-sm text-green-700 hover:text-green-900 font-medium transition-colors py-2 rounded-md hover:bg-green-50"
               >
                 Bearbeiten
               </Link>

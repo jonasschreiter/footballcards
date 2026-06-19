@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="de" className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
       <body className="min-h-screen bg-gray-50">
         <Navbar />
-        <main className="max-w-5xl mx-auto px-4 py-8">{children}</main>
+        <main className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-8">{children}</main>
       </body>
     </html>
   );

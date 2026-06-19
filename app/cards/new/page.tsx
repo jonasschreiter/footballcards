@@ -14,7 +14,9 @@ export default async function NewCardPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Neue Karte anlegen</h1>
+      <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5 sm:mb-6">
+        Neue Karte anlegen
+      </h1>
       <CardForm />
     </div>
   );

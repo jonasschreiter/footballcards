@@ -31,17 +31,23 @@ export default function Navbar() {
 
   return (
     <nav className="bg-green-700 text-white shadow-md">
-      <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/cards" className="font-bold text-lg tracking-tight hover:text-green-200 transition-colors">
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 py-3 sm:h-14 flex flex-wrap sm:flex-nowrap items-center gap-3 sm:gap-4 justify-between">
+        <Link
+          href="/cards"
+          className="font-bold text-base sm:text-lg tracking-tight hover:text-green-200 transition-colors"
+        >
           ⚽ Karten-Katalog
         </Link>
-        <div className="flex items-center gap-4 text-sm">
+        <div className="w-full sm:w-auto flex items-center justify-end gap-2 sm:gap-4 text-sm">
           {email ? (
             <>
-              <Link href="/cards/new" className="hover:text-green-200 transition-colors">
+              <Link
+                href="/cards/new"
+                className="hover:text-green-200 transition-colors px-2 py-1 rounded-md border border-green-500/30"
+              >
                 + Neue Karte
               </Link>
-              <span className="text-green-300 hidden sm:inline">{email}</span>
+              <span className="text-green-200 hidden lg:inline max-w-52 truncate">{email}</span>
               <button
                 onClick={handleLogout}
                 className="bg-green-800 hover:bg-green-900 px-3 py-1.5 rounded transition-colors"
