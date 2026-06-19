@@ -32,7 +32,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-slate-950/80 text-slate-100 border-b border-slate-800 backdrop-blur-md shadow-lg shadow-black/20">
-      <div className="max-w-5xl mx-auto px-3 sm:px-4 py-3 sm:h-14 flex flex-wrap sm:flex-nowrap items-center gap-3 sm:gap-4 justify-between">
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 py-2 sm:h-16 flex flex-wrap sm:flex-nowrap items-center gap-3 sm:gap-4 justify-between">
         <Link
           href="/cards"
           className="inline-flex items-center hover:opacity-90 transition-opacity"
@@ -43,7 +43,7 @@ export default function Navbar() {
             width={64}
             height={64}
             priority
-            className="h-10 w-10 sm:h-11 sm:w-11 object-contain"
+            className="h-12 w-12 sm:h-14 sm:w-14 object-contain"
           />
         </Link>
         <div className="w-full sm:w-auto flex items-center justify-end gap-2 sm:gap-4 text-sm">

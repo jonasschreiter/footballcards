@@ -33,7 +33,7 @@ export default async function CardsPage() {
             width={220}
             height={90}
             priority
-            className="h-12 w-auto sm:h-14 object-contain"
+            className="h-16 w-auto sm:h-20 object-contain"
           />
         </div>
         <Link
