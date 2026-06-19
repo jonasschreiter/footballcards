@@ -29,7 +29,7 @@ export default function CardForm({ card }: Props) {
   const [analysisDone, setAnalysisDone] = useState(isEdit);
   const [playerName, setPlayerName] = useState(card?.player_name ?? "");
   const [team, setTeam] = useState(card?.team ?? "");
-  const [year, setYear] = useState(card?.year ?? new Date().getFullYear());
+  const [year, setYear] = useState<number | "">(card?.year ?? "");
   const [condition, setCondition] = useState<Card["condition"]>(card?.condition ?? "excellent");
   const [notes, setNotes] = useState(card?.notes ?? "");
   const [psaGraded, setPsaGraded] = useState(card?.psa_graded ?? false);
@@ -103,6 +103,12 @@ export default function CardForm({ card }: Props) {
     const rawPsaGrade = fd.get("psa_grade") as string | null;
     const psaGrade =
       isPsaGraded && rawPsaGrade ? Number.parseInt(rawPsaGrade, 10) : null;
+
+    if (year === "") {
+      setError("Bitte gib eine Saison an.");
+      setLoading(false);
+      return;
+    }
 
     if (isPsaGraded && (psaGrade === null || Number.isNaN(psaGrade))) {
       setError("Bitte waehle einen PSA-Grade zwischen 0 und 10.");
@@ -253,7 +259,7 @@ export default function CardForm({ card }: Props) {
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Jahrgang *
+                Saison *
               </label>
               <input
                 name="year"
@@ -262,9 +268,10 @@ export default function CardForm({ card }: Props) {
                 min={1900}
                 max={new Date().getFullYear() + 1}
                 value={year}
-                onChange={(e) =>
-                  setYear(Number.parseInt(e.target.value, 10) || new Date().getFullYear())
-                }
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setYear(val === "" ? "" : Number.parseInt(val, 10) || "");
+                }}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
               />
             </div>
