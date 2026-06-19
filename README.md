@@ -8,6 +8,7 @@ Eine Next.js App (App Router, TypeScript, Tailwind CSS) mit Supabase Auth und ei
 - **Kartenliste** - zeigt alle eigenen Karten (RLS: jede Karte gehört `auth.uid()`)
 - **Karte anlegen** - Formular mit Spieler, Team, Jahrgang, Zustand, Notizen und Bild-Upload (kein Bild-URL-Feld)
 - **PSA-Grade** - optional per Checkbox mit Dropdown-Auswahl von 0 bis 10
+- **Auto-Erkennung** - Bildauswahl kann Felder automatisch per KI vorbefuellen
 - **Karte bearbeiten** - vorbefülltes Formular
 - **Karte löschen** - mit Bestätigungs-Dialog
 - **Middleware** - schützt `/cards/*`, leitet eingeloggte User von `/login` weg
@@ -22,6 +23,8 @@ Trage in `.env.local` deine Supabase-Werte ein:
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://<dein-projekt>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon-key>
+OPENAI_API_KEY=<dein-openai-api-key>
+OPENAI_MODEL=gpt-4.1-mini
 ```
 
 ### 2. Datenbank-Migration

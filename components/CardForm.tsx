@@ -24,7 +24,68 @@ export default function CardForm({ card }: Props) {
   const isEdit = !!card;
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [recognizing, setRecognizing] = useState(false);
+  const [recognitionConfidence, setRecognitionConfidence] = useState<number | null>(null);
+  const [playerName, setPlayerName] = useState(card?.player_name ?? "");
+  const [team, setTeam] = useState(card?.team ?? "");
+  const [year, setYear] = useState(card?.year ?? new Date().getFullYear());
+  const [condition, setCondition] = useState<Card["condition"]>(card?.condition ?? "excellent");
+  const [notes, setNotes] = useState(card?.notes ?? "");
   const [psaGraded, setPsaGraded] = useState(card?.psa_graded ?? false);
+  const [psaGrade, setPsaGrade] = useState<number | null>(card?.psa_grade ?? null);
+
+  async function recognizeCard(imageFile: File) {
+    setRecognizing(true);
+    setError(null);
+
+    try {
+      const recognitionFd = new FormData();
+      recognitionFd.append("image", imageFile);
+
+      const response = await fetch("/api/cards/recognize", {
+        method: "POST",
+        body: recognitionFd,
+      });
+
+      const payload = (await response.json()) as {
+        error?: string;
+        data?: {
+          player_name: string | null;
+          team: string | null;
+          year: number | null;
+          condition: Card["condition"] | null;
+          psa_graded: boolean | null;
+          psa_grade: number | null;
+          notes: string | null;
+          confidence: number | null;
+        };
+      };
+
+      if (!response.ok || !payload.data) {
+        throw new Error(payload.error ?? "Erkennung fehlgeschlagen.");
+      }
+
+      if (payload.data.player_name) setPlayerName(payload.data.player_name);
+      if (payload.data.team) setTeam(payload.data.team);
+      if (payload.data.year) setYear(payload.data.year);
+      if (payload.data.condition) setCondition(payload.data.condition);
+      if (payload.data.notes) setNotes(payload.data.notes);
+
+      if (payload.data.psa_graded !== null) {
+        setPsaGraded(payload.data.psa_graded);
+      }
+      setPsaGrade(payload.data.psa_grade ?? null);
+      setRecognitionConfidence(payload.data.confidence ?? null);
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Die automatische Erkennung ist fehlgeschlagen."
+      );
+    } finally {
+      setRecognizing(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -86,13 +147,13 @@ export default function CardForm({ card }: Props) {
     }
 
     const data: CardInsert = {
-      player_name: fd.get("player_name") as string,
-      team: fd.get("team") as string,
-      year: parseInt(fd.get("year") as string, 10),
-      condition: fd.get("condition") as Card["condition"],
+      player_name: playerName,
+      team,
+      year,
+      condition,
       psa_graded: isPsaGraded,
       psa_grade: psaGrade,
-      notes: (fd.get("notes") as string) || null,
+      notes: notes.trim() || null,
       image_url: imageUrl,
     };
 
@@ -118,7 +179,8 @@ export default function CardForm({ card }: Props) {
           <input
             name="player_name"
             required
-            defaultValue={card?.player_name}
+            value={playerName}
+            onChange={(e) => setPlayerName(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
           />
         </div>
@@ -129,7 +191,8 @@ export default function CardForm({ card }: Props) {
           <input
             name="team"
             required
-            defaultValue={card?.team}
+            value={team}
+            onChange={(e) => setTeam(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
           />
         </div>
@@ -155,7 +218,10 @@ export default function CardForm({ card }: Props) {
             <select
               name="psa_grade"
               required={psaGraded}
-              defaultValue={card?.psa_grade ?? ""}
+              value={psaGrade ?? ""}
+              onChange={(e) =>
+                setPsaGrade(e.target.value ? Number.parseInt(e.target.value, 10) : null)
+              }
               className="w-full sm:w-48 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
             >
               <option value="">Bitte waehlen</option>
@@ -180,7 +246,8 @@ export default function CardForm({ card }: Props) {
             required
             min={1900}
             max={new Date().getFullYear() + 1}
-            defaultValue={card?.year ?? new Date().getFullYear()}
+            value={year}
+            onChange={(e) => setYear(Number.parseInt(e.target.value, 10) || new Date().getFullYear())}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
           />
         </div>
@@ -191,7 +258,8 @@ export default function CardForm({ card }: Props) {
           <select
             name="condition"
             required
-            defaultValue={card?.condition ?? "excellent"}
+            value={condition}
+            onChange={(e) => setCondition(e.target.value as Card["condition"])}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
           >
             {CONDITIONS.map((c) => (
@@ -211,11 +279,23 @@ export default function CardForm({ card }: Props) {
           name="image_file"
           type="file"
           accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              void recognizeCard(file);
+            }
+          }}
           className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm file:mr-3 file:px-3 file:py-1.5 file:rounded-md file:border-0 file:bg-green-50 file:text-green-700 file:font-medium"
         />
         <p className="text-xs text-gray-500 mt-1">
-          Optional. Wenn du ein Bild auswaehlst, wird es in Supabase Storage gespeichert.
+          Optional. Nach der Bildauswahl werden Felder automatisch erkannt und vorbefuellt.
         </p>
+        {recognizing && <p className="text-xs text-green-700 mt-1">Erkennung laeuft...</p>}
+        {recognitionConfidence !== null && !recognizing && (
+          <p className="text-xs text-gray-600 mt-1">
+            Erkennungs-Sicherheit: {Math.round(recognitionConfidence * 100)}%
+          </p>
+        )}
       </div>
 
       {card?.image_url && (
@@ -241,7 +321,8 @@ export default function CardForm({ card }: Props) {
         <textarea
           name="notes"
           rows={3}
-          defaultValue={card?.notes ?? ""}
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
           className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600 resize-none"
         />
       </div>
