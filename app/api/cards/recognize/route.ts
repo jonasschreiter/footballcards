@@ -61,6 +61,59 @@ function normalizeResult(payload: unknown): RecognitionResult {
   };
 }
 
+function tryParseJson(value: string): unknown | null {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+}
+
+function extractStructuredResult(payload: unknown): unknown | null {
+  if (typeof payload !== "object" || payload === null) return null;
+
+  const root = payload as Record<string, unknown>;
+
+  if (typeof root.output_text === "string") {
+    const parsed = tryParseJson(root.output_text);
+    if (parsed !== null) return parsed;
+  }
+
+  if (typeof root.output_parsed === "object" && root.output_parsed !== null) {
+    return root.output_parsed;
+  }
+
+  const output = Array.isArray(root.output) ? root.output : [];
+
+  for (const item of output) {
+    if (typeof item !== "object" || item === null) continue;
+    const content = Array.isArray((item as Record<string, unknown>).content)
+      ? ((item as Record<string, unknown>).content as unknown[])
+      : [];
+
+    for (const part of content) {
+      if (typeof part !== "object" || part === null) continue;
+      const partObj = part as Record<string, unknown>;
+
+      if (typeof partObj.text === "string") {
+        const parsed = tryParseJson(partObj.text);
+        if (parsed !== null) return parsed;
+      }
+
+      if (typeof partObj.value === "string") {
+        const parsed = tryParseJson(partObj.value);
+        if (parsed !== null) return parsed;
+      }
+
+      if (typeof partObj.parsed === "object" && partObj.parsed !== null) {
+        return partObj.parsed;
+      }
+    }
+  }
+
+  return null;
+}
+
 export async function POST(request: Request) {
   try {
     const supabase = await createClient();
@@ -181,22 +234,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const payload = (await response.json()) as {
-      output_text?: string;
-    };
+    const payload = (await response.json()) as unknown;
+    const parsed = extractStructuredResult(payload);
 
-    if (!payload.output_text) {
+    if (parsed === null) {
       return Response.json(
         { error: "Modell hat keine strukturierte Antwort geliefert." },
         { status: 502 }
       );
-    }
-
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(payload.output_text);
-    } catch {
-      return Response.json({ error: "Antwort konnte nicht geparst werden." }, { status: 502 });
     }
 
     return Response.json({ data: normalizeResult(parsed) });
