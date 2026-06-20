@@ -211,11 +211,8 @@ export default function CardForm({ card, previewImageUrl }: Props) {
           >
             <span className="flex items-center justify-center w-24 h-24 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/20 group-hover:from-emerald-500/30 group-hover:to-teal-500/20 transition-all duration-300">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-12 h-12 text-emerald-300 group-hover:text-emerald-200 transition-colors">
-                <path d="M3 9V6a2 2 0 0 1 2-2h2" />
-                <path d="M15 4h2a2 2 0 0 1 2 2v3" />
-                <path d="M21 15v3a2 2 0 0 1-2 2h-2" />
-                <path d="M9 20H7a2 2 0 0 1-2-2v-3" />
-                <rect x="7" y="7" width="10" height="10" rx="1" />
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
               </svg>
             </span>
             <span className="text-center">
