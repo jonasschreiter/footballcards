@@ -1,13 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 
 export default function Navbar({ initialEmail }: { initialEmail: string | null }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [email, setEmail] = useState<string | null>(initialEmail);
 
   useEffect(() => {
@@ -33,31 +32,10 @@ export default function Navbar({ initialEmail }: { initialEmail: string | null }
 
   return (
     <nav className="bg-slate-950/80 text-slate-100 border-b border-slate-800 backdrop-blur-md shadow-lg shadow-black/20">
-      <div className="w-full px-2 sm:px-4 lg:px-8 xl:px-12 2xl:px-16 py-1.5 sm:h-16 flex flex-wrap sm:flex-nowrap items-center gap-3 sm:gap-4 justify-between">
-        <Link
-          href="/cards"
-          className="inline-flex items-center hover:opacity-90 transition-opacity"
-        >
-          <span className="h-14 w-14 sm:h-[3.75rem] sm:w-[3.75rem] overflow-hidden rounded-md inline-flex items-center justify-center">
-            <Image
-              src="/cards-vault-logo.png"
-              alt="Cards-Vault Logo"
-              width={220}
-              height={220}
-              priority
-              className="h-full w-full object-contain"
-            />
-          </span>
-        </Link>
-        <div className="w-full sm:w-auto flex items-center justify-end gap-2 sm:gap-4 text-sm">
+      <div className="w-full px-2 sm:px-4 lg:px-8 xl:px-12 2xl:px-16 py-1.5 sm:h-16 flex items-center justify-end">
+        <div className="flex items-center gap-2 sm:gap-4 text-sm">
           {email ? (
             <>
-              <Link
-                href="/cards/new"
-                className="hover:text-emerald-300 transition-colors px-2 py-1 rounded-md border border-emerald-400/30 bg-emerald-500/10"
-              >
-                + Neue Karte
-              </Link>
               <span className="text-slate-400 hidden lg:inline max-w-52 truncate">{email}</span>
               <button
                 onClick={handleLogout}
@@ -66,11 +44,11 @@ export default function Navbar({ initialEmail }: { initialEmail: string | null }
                 Abmelden
               </button>
             </>
-          ) : (
-            <Link href="/login" className="hover:text-emerald-300 transition-colors">
+          ) : pathname !== "/login" ? (
+            <a href="/login" className="hover:text-emerald-300 transition-colors">
               Anmelden
-            </Link>
-          )}
+            </a>
+          ) : null}
         </div>
       </div>
     </nav>
