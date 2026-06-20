@@ -11,15 +11,18 @@ export default function Navbar({ initialEmail }: { initialEmail: string | null }
   const [email, setEmail] = useState<string | null>(initialEmail);
 
   useEffect(() => {
+    setEmail(initialEmail);
+  }, [initialEmail]);
+
+  useEffect(() => {
     const supabase = createClient();
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setEmail(session?.user?.email ?? null);
-      router.refresh();
     });
     return () => subscription.unsubscribe();
-  }, [router]);
+  }, []);
 
   const handleLogout = async () => {
     const supabase = createClient();
