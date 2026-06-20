@@ -5,7 +5,6 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 import CardForm from "@/components/CardForm";
-import CardValueForm from "@/components/CardValueForm";
 import type { Card } from "@/lib/types";
 
 interface Props {
@@ -34,7 +33,7 @@ export default async function EditCardPage({ params }: Props) {
   const previewImageUrl = await resolveCardImageUrl(supabase, typedCard.image_url);
 
   return (
-    <div className="space-y-4 sm:space-y-5 max-w-2xl">
+    <div className="space-y-6">
       <div className="form-reveal form-reveal-1 border border-slate-700/80 bg-slate-900/65 rounded-2xl p-4 sm:p-5 shadow-lg shadow-black/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-100">Karte bearbeiten</h1>
@@ -57,14 +56,7 @@ export default async function EditCardPage({ params }: Props) {
         </div>
       </div>
 
-      <CardForm card={typedCard} previewImageUrl={previewImageUrl} />
-      <div className="mt-4 sm:mt-5">
-        <CardValueForm
-          id={typedCard.id}
-          purchasePrice={typedCard.purchase_price}
-          currentValue={typedCard.current_value}
-        />
-      </div>
+      <CardForm card={typedCard} previewImageUrl={previewImageUrl} fullWidth />
     </div>
   );
 }

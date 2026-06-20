@@ -9,6 +9,7 @@ import type { Card, CardInsert } from "@/lib/types";
 interface Props {
   card?: Card;
   previewImageUrl?: string | null;
+  fullWidth?: boolean;
 }
 
 const CONDITIONS: { value: Card["condition"]; label: string }[] = [
@@ -25,7 +26,15 @@ const SEASONS = Array.from({ length: 9 }, (_, i) => {
   return `${startYear}/${endYear}`;
 });
 
-export default function CardForm({ card, previewImageUrl }: Props) {
+function parseCurrency(input: string): number | null {
+  const normalized = input.replace(",", ".").trim();
+  if (!normalized) return null;
+  const value = Number.parseFloat(normalized);
+  if (Number.isNaN(value) || value < 0) return null;
+  return Number(value.toFixed(2));
+}
+
+export default function CardForm({ card, previewImageUrl, fullWidth = false }: Props) {
   const router = useRouter();
   const isEdit = !!card;
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +51,8 @@ export default function CardForm({ card, previewImageUrl }: Props) {
   const [rookieCard, setRookieCard] = useState(card?.rookie_card ?? false);
   const [psaGraded, setPsaGraded] = useState(card?.psa_graded ?? false);
   const [psaGrade, setPsaGrade] = useState<number | null>(card?.psa_grade ?? null);
+  const [purchasePriceInput, setPurchasePriceInput] = useState(card?.purchase_price?.toString() ?? "");
+  const [currentValueInput, setCurrentValueInput] = useState(card?.current_value?.toString() ?? "");
   const showDataFields = isEdit || analysisDone;
 
   async function recognizeCard(imageFile: File) {
@@ -126,6 +137,21 @@ export default function CardForm({ card, previewImageUrl }: Props) {
       return;
     }
 
+    const purchasePriceParsed = parseCurrency(purchasePriceInput);
+    const currentValueParsed = parseCurrency(currentValueInput);
+
+    if (purchasePriceInput && purchasePriceParsed === null) {
+      setError("Einkaufspreis muss eine positive Zahl sein.");
+      setLoading(false);
+      return;
+    }
+
+    if (currentValueInput && currentValueParsed === null) {
+      setError("Aktueller Wert muss eine positive Zahl sein.");
+      setLoading(false);
+      return;
+    }
+
     let imageUrl = card?.image_url ?? null;
     const imageFile = fd.get("image_file");
 
@@ -160,8 +186,8 @@ export default function CardForm({ card, previewImageUrl }: Props) {
       rookie_card: isRookieCard,
       psa_graded: isPsaGraded,
       psa_grade: psaGrade,
-      purchase_price: card?.purchase_price ?? null,
-      current_value: card?.current_value ?? null,
+      purchase_price: purchasePriceParsed,
+      current_value: currentValueParsed,
       notes: notes.trim() || null,
       image_url: imageUrl,
     };
@@ -184,7 +210,10 @@ export default function CardForm({ card, previewImageUrl }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6 max-w-2xl w-full pb-24 sm:pb-0">
+    <form
+      onSubmit={handleSubmit}
+      className={`space-y-5 sm:space-y-6 w-full pb-24 sm:pb-0 ${fullWidth ? "max-w-none" : "max-w-2xl"}`}
+    >
       {/* Hidden file input – always present so the submit path can read it */}
       <input
         id="image_file_input"
@@ -414,6 +443,48 @@ export default function CardForm({ card, previewImageUrl }: Props) {
               className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
             />
           </div>
+
+          {isEdit && (
+            <div className="form-reveal form-reveal-6 rounded-2xl border border-slate-700/80 bg-slate-900/70 p-4 sm:p-5 space-y-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-300">
+                <span className="text-emerald-300 mr-1">€</span>Wertentwicklung
+              </p>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
+                    Einkaufspreis (€)
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    min={0}
+                    step="0.01"
+                    value={purchasePriceInput}
+                    onChange={(e) => setPurchasePriceInput(e.target.value)}
+                    className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    placeholder="z.B. 45.00"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
+                    Aktueller Wert (€)
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    min={0}
+                    step="0.01"
+                    value={currentValueInput}
+                    onChange={(e) => setCurrentValueInput(e.target.value)}
+                    className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    placeholder="z.B. 89.99"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
 
