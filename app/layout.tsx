@@ -44,7 +44,7 @@ export default async function RootLayout({
     >
       <body className="min-h-screen">
         <Navbar initialEmail={user?.email ?? null} />
-        <main className="w-full px-3 sm:px-5 lg:px-8 xl:px-12 2xl:px-16 py-4 sm:py-8">{children}</main>
+        <main className="mx-auto w-full max-w-7xl px-3 sm:px-5 lg:px-8 py-4 sm:py-8">{children}</main>
       </body>
     </html>
   );
