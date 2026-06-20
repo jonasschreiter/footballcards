@@ -150,12 +150,12 @@ export default function CardsSearchPanel({ cards }: Props) {
         </div>
       )}
 
-      <div className="grid gap-4 grid-cols-1 sm:justify-start sm:[grid-template-columns:repeat(auto-fill,minmax(260px,340px))]">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
         {filteredCards.map((card) => (
           <div
             key={card.id}
             onClick={() => router.push(`/cards/${card.id}`)}
-            className="form-reveal form-reveal-4 w-full sm:max-w-[340px] bg-slate-900/80 rounded-2xl shadow-lg shadow-black/20 border border-slate-700/70 p-4 sm:p-5 flex flex-col gap-2 hover:border-slate-500 transition-colors cursor-pointer"
+            className="form-reveal form-reveal-4 w-full bg-slate-900/80 rounded-2xl shadow-lg shadow-black/20 border border-slate-700/70 p-4 sm:p-5 flex flex-col gap-2 hover:border-slate-500 transition-colors cursor-pointer"
           >
             {card.image_url && (
               <Image
