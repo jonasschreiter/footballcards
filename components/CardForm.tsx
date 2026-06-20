@@ -185,35 +185,86 @@ export default function CardForm({ card, previewImageUrl }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6 max-w-2xl w-full pb-24 sm:pb-0">
-      <div className="form-reveal form-reveal-1 border border-slate-700/80 bg-slate-900/65 rounded-2xl p-4 sm:p-5 shadow-lg shadow-black/20">
-        <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
-          <span className="text-emerald-300 mr-1">◈</span>Bild hochladen *
-        </label>
-        <input
-          name="image_file"
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-              setAnalysisDone(false);
-              void recognizeCard(file);
-            }
-          }}
-          className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2 text-sm file:mr-3 file:px-4 file:py-2 file:rounded-lg file:border-0 file:bg-emerald-500/20 file:text-emerald-200 file:font-semibold"
-        />
-        {!isEdit && !showDataFields && (
-          <p className="text-xs text-slate-400 mt-3 leading-relaxed">
-            Nach dem Upload analysiert die App das Foto und blendet danach alle Felder zum Bearbeiten ein.
-          </p>
-        )}
-        {recognizing && <p className="text-xs text-emerald-300 mt-3">Erkennung laeuft...</p>}
-        {recognitionConfidence !== null && !recognizing && (
-          <p className="text-xs text-slate-400 mt-3">
-            Erkennungs-Sicherheit: {Math.round(recognitionConfidence * 100)}%
-          </p>
-        )}
-      </div>
+      {/* Hidden file input – always present so the submit path can read it */}
+      <input
+        id="image_file_input"
+        name="image_file"
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            setAnalysisDone(false);
+            void recognizeCard(file);
+          }
+        }}
+      />
+
+      {/* Scan button – shown before first scan on new card */}
+      {!isEdit && !showDataFields && (
+        <div className="flex flex-col items-center justify-center min-h-[60vh]">
+          <button
+            type="button"
+            onClick={() => document.getElementById("image_file_input")?.click()}
+            className="group relative flex flex-col items-center gap-5 rounded-3xl border border-emerald-500/30 bg-gradient-to-b from-slate-800/80 to-slate-900/90 px-12 py-10 shadow-2xl shadow-black/40 hover:border-emerald-400/60 hover:shadow-emerald-900/30 transition-all duration-300 active:scale-95"
+          >
+            <span className="flex items-center justify-center w-24 h-24 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/20 group-hover:from-emerald-500/30 group-hover:to-teal-500/20 transition-all duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-12 h-12 text-emerald-300 group-hover:text-emerald-200 transition-colors">
+                <path d="M3 9V6a2 2 0 0 1 2-2h2" />
+                <path d="M15 4h2a2 2 0 0 1 2 2v3" />
+                <path d="M21 15v3a2 2 0 0 1-2 2h-2" />
+                <path d="M9 20H7a2 2 0 0 1-2-2v-3" />
+                <rect x="7" y="7" width="10" height="10" rx="1" />
+              </svg>
+            </span>
+            <span className="text-center">
+              <span className="block text-xl font-bold text-slate-100 group-hover:text-white transition-colors">Karte scannen</span>
+              <span className="block text-sm text-slate-400 mt-1 group-hover:text-slate-300 transition-colors">Foto aufnehmen oder auswählen</span>
+            </span>
+          </button>
+          {recognizing && (
+            <p className="text-sm text-emerald-300 mt-8 animate-pulse">Karte wird erkannt…</p>
+          )}
+        </div>
+      )}
+
+      {/* After scan: show small re-scan link + confidence */}
+      {showDataFields && (
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => document.getElementById("image_file_input")?.click()}
+            className="text-xs text-slate-400 hover:text-emerald-300 transition-colors underline underline-offset-2"
+          >
+            Anderes Bild wählen
+          </button>
+          {recognitionConfidence !== null && !recognizing && (
+            <span className="text-xs text-slate-500">
+              Erkennungs-Sicherheit: {Math.round(recognitionConfidence * 100)}%
+            </span>
+          )}
+          {recognizing && (
+            <span className="text-xs text-emerald-300 animate-pulse">Karte wird erkannt…</span>
+          )}
+        </div>
+      )}
+
+      {/* Edit mode: file picker inline */}
+      {isEdit && (
+        <div className="form-reveal form-reveal-1 border border-slate-700/80 bg-slate-900/65 rounded-2xl p-4 sm:p-5 shadow-lg shadow-black/20">
+          <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
+            <span className="text-emerald-300 mr-1">◈</span>Bild ersetzen
+          </label>
+          <button
+            type="button"
+            onClick={() => document.getElementById("image_file_input")?.click()}
+            className="w-full border border-slate-700 bg-slate-950/70 text-slate-300 hover:text-slate-100 rounded-xl px-4 py-2.5 text-sm text-left transition-colors"
+          >
+            Neues Bild auswählen…
+          </button>
+        </div>
+      )}
 
       {previewImageUrl && (
         <div className="form-reveal form-reveal-2 border border-slate-700/80 bg-slate-900/45 rounded-2xl p-4">
