@@ -198,13 +198,6 @@ export default function CardsSearchPanel({ cards }: Props) {
 
             <div className="flex gap-2 mt-auto pt-2 border-t border-slate-800">
               <Link
-                href={`/cards/${card.id}`}
-                onClick={(e) => e.stopPropagation()}
-                className="flex-1 text-center text-sm text-emerald-300 hover:text-emerald-200 font-medium transition-colors py-2 rounded-md hover:bg-emerald-500/10"
-              >
-                Details
-              </Link>
-              <Link
                 href={`/cards/${card.id}/edit`}
                 onClick={(e) => e.stopPropagation()}
                 className="flex-1 text-center text-sm text-cyan-300 hover:text-cyan-200 font-medium transition-colors py-2 rounded-md hover:bg-cyan-500/10"
