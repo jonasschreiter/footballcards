@@ -38,7 +38,7 @@ export default async function EditCardPage({ params }: Props) {
         Karte bearbeiten
       </h1>
       <CardForm card={typedCard} previewImageUrl={previewImageUrl} />
-      <div className="mt-6">
+      <div className="mt-6 max-w-2xl">
         <CardValueForm
           id={typedCard.id}
           purchasePrice={typedCard.purchase_price}
