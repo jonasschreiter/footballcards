@@ -33,15 +33,15 @@ export default async function CardsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="form-reveal form-reveal-1 border border-slate-700/80 bg-slate-900/65 rounded-2xl px-2 py-2 sm:px-3 sm:py-2.5 shadow-lg shadow-black/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <div className="inline-flex items-center h-24 sm:h-28 w-72 sm:w-[22rem] overflow-hidden rounded-xl">
+      <div className="form-reveal form-reveal-1 border border-slate-700/80 bg-slate-900/65 rounded-2xl px-2 py-2 sm:px-3 sm:py-2.5 shadow-lg shadow-black/20 flex flex-col items-center gap-3">
+        <div className="flex items-center justify-center w-full h-24 sm:h-28 overflow-hidden">
           <Image
             src="/cards-vault-logo.png"
             alt="Cards-Vault Logo"
             width={520}
             height={240}
             priority
-            className="h-full w-full object-contain object-left"
+            className="h-full w-auto max-w-full object-contain"
           />
         </div>
         <Link

@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
@@ -34,21 +32,8 @@ export default function Navbar({ initialEmail }: { initialEmail: string | null }
 
   return (
     <nav className="bg-slate-950/80 text-slate-100 border-b border-slate-800 backdrop-blur-md shadow-lg shadow-black/20">
-      <div className="relative w-full px-2 sm:px-4 lg:px-8 xl:px-12 2xl:px-16 py-1.5 sm:h-16 flex items-center justify-center">
-        {/* Logo – absolut zentriert */}
-        <Link href="/cards" className="absolute left-1/2 -translate-x-1/2 hover:opacity-90 transition-opacity">
-          <Image
-            src="/cards-vault-logo.png"
-            alt="Cards-Vault Logo"
-            width={220}
-            height={220}
-            priority
-            className="h-12 sm:h-14 w-auto object-contain"
-          />
-        </Link>
-
-        {/* Rechts: Auth-Aktionen */}
-        <div className="ml-auto flex items-center gap-2 sm:gap-4 text-sm">
+      <div className="w-full px-2 sm:px-4 lg:px-8 xl:px-12 2xl:px-16 py-1.5 sm:h-16 flex items-center justify-end">
+        <div className="flex items-center gap-2 sm:gap-4 text-sm">
           {email ? (
             <>
               <span className="text-slate-400 hidden lg:inline max-w-52 truncate">{email}</span>
