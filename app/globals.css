@@ -28,6 +28,11 @@ body {
   font-family: var(--font-app-sans), sans-serif;
 }
 
+html,
+body {
+  background-color: #06080d;
+}
+
 h1,
 h2,
 h3 {
