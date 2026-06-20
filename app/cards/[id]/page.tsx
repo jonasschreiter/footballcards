@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { resolveCardImageUrl } from "@/lib/supabase/storage";
-import DeleteCardButton from "@/components/DeleteCardButton";
 import type { Card } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -145,9 +144,6 @@ export default async function CardDetailPage({ params }: Props) {
         )}
       </section>
 
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 px-4 py-3">
-        <DeleteCardButton id={typedCard.id} />
-      </div>
     </div>
   );
 }
