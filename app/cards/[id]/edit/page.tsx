@@ -4,6 +4,7 @@ import { resolveCardImageUrl } from "@/lib/supabase/storage";
 
 export const dynamic = "force-dynamic";
 import CardForm from "@/components/CardForm";
+import CardValueForm from "@/components/CardValueForm";
 import type { Card } from "@/lib/types";
 
 interface Props {
@@ -37,6 +38,13 @@ export default async function EditCardPage({ params }: Props) {
         Karte bearbeiten
       </h1>
       <CardForm card={typedCard} previewImageUrl={previewImageUrl} />
+      <div className="mt-6">
+        <CardValueForm
+          id={typedCard.id}
+          purchasePrice={typedCard.purchase_price}
+          currentValue={typedCard.current_value}
+        />
+      </div>
     </div>
   );
 }

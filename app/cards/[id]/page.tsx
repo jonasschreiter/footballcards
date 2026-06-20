@@ -4,7 +4,6 @@ import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { resolveCardImageUrl } from "@/lib/supabase/storage";
 import DeleteCardButton from "@/components/DeleteCardButton";
-import CardValueForm from "@/components/CardValueForm";
 import type { Card } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +28,11 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+function formatCurrency(value: number | null): string {
+  if (value === null) return "-";
+  return `${value.toFixed(2)} €`;
+}
+
 export default async function CardDetailPage({ params }: Props) {
   const { id } = await params;
   const supabase = await createClient();
@@ -49,6 +53,10 @@ export default async function CardDetailPage({ params }: Props) {
 
   const typedCard = card as Card;
   const signedImageUrl = await resolveCardImageUrl(supabase, typedCard.image_url);
+  const profit =
+    typedCard.current_value !== null && typedCard.purchase_price !== null
+      ? Number((typedCard.current_value - typedCard.purchase_price).toFixed(2))
+      : null;
 
   return (
     <div className="space-y-6">
@@ -109,11 +117,33 @@ export default async function CardDetailPage({ params }: Props) {
         )}
       </section>
 
-      <CardValueForm
-        id={typedCard.id}
-        purchasePrice={typedCard.purchase_price}
-        currentValue={typedCard.current_value}
-      />
+      <section className="form-reveal form-reveal-3 rounded-2xl border border-slate-700/80 bg-slate-900/70 p-4 sm:p-5 space-y-4">
+        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-300">
+          <span className="text-emerald-300 mr-1">€</span>Wertentwicklung
+        </p>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div className="rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2.5">
+            <p className="text-xs uppercase tracking-[0.08em] text-slate-400">Einkaufspreis</p>
+            <p className="text-base font-semibold text-slate-100 mt-1">
+              {formatCurrency(typedCard.purchase_price)}
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2.5">
+            <p className="text-xs uppercase tracking-[0.08em] text-slate-400">Aktueller Wert</p>
+            <p className="text-base font-semibold text-slate-100 mt-1">
+              {formatCurrency(typedCard.current_value)}
+            </p>
+          </div>
+        </div>
+
+        {profit !== null && (
+          <p className={`text-sm font-medium ${profit >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+            {profit >= 0 ? "Gewinn" : "Verlust"}: {profit.toFixed(2)} €
+          </p>
+        )}
+      </section>
 
       <div className="rounded-2xl border border-slate-800 bg-slate-900/40 px-4 py-3">
         <DeleteCardButton id={typedCard.id} />
