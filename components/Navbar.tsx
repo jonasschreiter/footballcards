@@ -6,22 +6,20 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 
-export default function Navbar() {
+export default function Navbar({ initialEmail }: { initialEmail: string | null }) {
   const router = useRouter();
-  const [email, setEmail] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(initialEmail);
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setEmail(user?.email ?? null);
-    });
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setEmail(session?.user?.email ?? null);
+      router.refresh();
     });
     return () => subscription.unsubscribe();
-  }, []);
+  }, [router]);
 
   const handleLogout = async () => {
     const supabase = createClient();
