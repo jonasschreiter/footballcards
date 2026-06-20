@@ -444,45 +444,49 @@ export default function CardForm({ card, previewImageUrl, fullWidth = false }: P
             />
           </div>
 
+          <div className="form-reveal form-reveal-6 rounded-2xl border border-slate-700/80 bg-slate-900/70 p-4 sm:p-5 space-y-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-300">
+              <span className="text-emerald-300 mr-1">€</span>Wertentwicklung (optional)
+            </p>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
+                  Einkaufspreis (€)
+                </label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  step="0.01"
+                  value={purchasePriceInput}
+                  onChange={(e) => setPurchasePriceInput(e.target.value)}
+                  className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  placeholder="z.B. 45.00"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
+                  Aktueller Wert (€)
+                </label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  step="0.01"
+                  value={currentValueInput}
+                  onChange={(e) => setCurrentValueInput(e.target.value)}
+                  className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  placeholder="z.B. 89.99"
+                />
+              </div>
+            </div>
+          </div>
+
           {isEdit && (
             <div className="form-reveal form-reveal-6 rounded-2xl border border-slate-700/80 bg-slate-900/70 p-4 sm:p-5 space-y-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-300">
-                <span className="text-emerald-300 mr-1">€</span>Wertentwicklung
-              </p>
-
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
-                    Einkaufspreis (€)
-                  </label>
-                  <input
-                    type="number"
-                    inputMode="decimal"
-                    min={0}
-                    step="0.01"
-                    value={purchasePriceInput}
-                    onChange={(e) => setPurchasePriceInput(e.target.value)}
-                    className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    placeholder="z.B. 45.00"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-300 mb-2">
-                    Aktueller Wert (€)
-                  </label>
-                  <input
-                    type="number"
-                    inputMode="decimal"
-                    min={0}
-                    step="0.01"
-                    value={currentValueInput}
-                    onChange={(e) => setCurrentValueInput(e.target.value)}
-                    className="premium-field w-full border border-slate-700 bg-slate-950/70 text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    placeholder="z.B. 89.99"
-                  />
-                </div>
-              </div>
+              <p className="text-xs text-slate-400">Du kannst die Werte hier jederzeit später anpassen.</p>
             </div>
           )}
         </>
