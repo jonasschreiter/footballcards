@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import DeleteCardButton from "@/components/DeleteCardButton";
 import type { Card } from "@/lib/types";
 
 const conditionLabel: Record<Card["condition"], string> = {
@@ -196,15 +195,14 @@ export default function CardsSearchPanel({ cards }: Props) {
 
             {card.notes && <p className="text-xs text-slate-500 line-clamp-2">{card.notes}</p>}
 
-            <div className="flex gap-2 mt-auto pt-2 border-t border-slate-800">
+            <div className="mt-auto pt-2 border-t border-slate-800">
               <Link
                 href={`/cards/${card.id}/edit`}
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 text-center text-sm text-cyan-300 hover:text-cyan-200 font-medium transition-colors py-2 rounded-md hover:bg-cyan-500/10"
+                className="w-full block text-center text-sm text-cyan-300 hover:text-cyan-200 font-medium transition-colors py-2 rounded-md hover:bg-cyan-500/10"
               >
                 Bearbeiten
               </Link>
-              <DeleteCardButton id={card.id} />
             </div>
           </div>
         ))}
